@@ -11,13 +11,23 @@ con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
   
-  var sql = "CREATE TABLE users (id INT(255), firstName VARCHAR(255), lastName VARCHAR(255))";
+//  con.query("DROP TABLE users", function (err, result) {
+//	  if (err) throw err;
+//	  console.log("Users table deleted");
+//  });
+  
+//con.query("DROP TABLE transactions", function (err, result) {
+//  if (err) throw err;
+//  console.log("Transactions table deleted");
+//});
+  
+  var sql = "CREATE TABLE users (userID INT(255) AUTO_INCREMENT PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))";
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log("Users table created");
   });
   
-  var sql = "CREATE TABLE transactions (tranID INT(255), title VARCHAR(255), fromID INT(255), toID INT(255), cost INT(255))";
+  var sql = "CREATE TABLE transactions (tranID INT(255) AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), fromID INT(255), toID INT(255), amount DEC(65, 2))";
   con.query(sql, function (err, result) {
     if (err) throw err;
     console.log("Transanctions table created");
