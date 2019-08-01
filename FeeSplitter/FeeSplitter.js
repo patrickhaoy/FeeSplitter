@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-//d
+
 var con = mysql.createConnection({
 	host: "den1.mysql6.gear.host",
 	user: "feesplitter",
