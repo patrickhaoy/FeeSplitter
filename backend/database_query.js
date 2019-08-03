@@ -8,28 +8,25 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err) {	
-	owes(1, 2);
+	//owes(1, 2);
 });
 
 function owes (user1, user2) {
-	var sqlPay = "SELECT SUM(amount) FROM transactions WHERE fromID = ? and toID = ?";
-	var pay = [];
-	var receive = 0;
+	var sqlPay = "SELECT SUM(amount) AS sum FROM transactions WHERE fromID = ? and toID = ?";
+	var pay, receive;
 	
-	con.query(sqlPay, [user1, user2], function (err, result, field) {
+	con.query(sqlPay, [user1, user2], function (err, result) {
 		if (err) throw err;
 		pay = result
-		console.log(pay);
-		//pay = result;
+		console.log(pay[0].sum);
 	});
 
 	con.query(sqlPay, [user2, user1], function (err, result) {
 		if (err) throw err;
-		console.log(result);
-		//receive = result;
+		receive = result;
+		console.log(receive[0].sum);
+		console.log((pay[0].sum - receive[0].sum).toFixed(2));
 	});
-	
-	getValue(pay);
 }
 
 function findUserID (firstName, lastName) {
@@ -38,8 +35,4 @@ function findUserID (firstName, lastName) {
 		if (err) throw err;
 		console.log(result);
 	});
-}
-
-function getValue(value) {
-	console.log(value);
 }
