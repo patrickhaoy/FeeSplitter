@@ -1,0 +1,29 @@
+{
+  "name": "feesplitter",
+  "version": "1.0.0",
+  "description": "Application for financial logistics on trips",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "create-react-app": "^3.0.1",
+    "express": "^4.17.1",
+    "mysql": "^2.17.1",
+    "node": "^12.7.0",
+    "react": "^16.8.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickhaoy/FeeSplitter.git"
+  },
+  "author": "Henry Gu and Patrick Yin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patrickhaoy/FeeSplitter/issues"
+  },
+  "homepage": "https://github.com/patrickhaoy/FeeSplitter#readme"
+}
