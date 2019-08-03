@@ -18,7 +18,7 @@ class App extends React.Component {
   }
     
   getUsers() {
-    fetch('http://localhost:4000')
+    fetch('https://fee-splitter.herokuapp.com')
       .then(response => response.json())
       .then(response => 
             this.setState(
