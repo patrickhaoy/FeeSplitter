@@ -31,3 +31,12 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  background-color: #2ecc71;
+}
+
+.dataView {
+  width: 20%;
+  margin: 1em;
+}
