@@ -12,7 +12,6 @@ con.connect(function(err) {
 	if (err) throw err;
 	  console.log("Connected!");
 
-	console.log(query.owes(1, 2));
 	// Henry Gu pays Patrick Yin $10.28 for Chipotle
 	// var sql = "INSERT INTO transactions (title, fromID, toID, amount) VALUES ('Chipotle', 1, 2, 10.28)";
 	// con.query(sql, function(err, result) {

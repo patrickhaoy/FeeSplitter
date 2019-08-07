@@ -22,4 +22,10 @@ con.connect(function(err) {
     	if (err) throw err;
     	console.log("Transanctions table created");
   	});
+
+	var sql = "CREATE TABLE groups (groupID INT(255) AUTO_INCREMENT PRIMARY KEY, userID INT(255))";
+	con.query(sql, function (err, result) {
+		if (err) throw err;
+		console.log("Groups table created");
+	})
 });
