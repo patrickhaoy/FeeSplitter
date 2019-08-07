@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { GoogleLogin } from 'react-google-login';
 
 class UsersView extends React.Component {
   constructor(props) {
@@ -164,6 +165,21 @@ class TransactionsView extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isAuthenticated: false,
+      user: null, 
+      token: ''
+    }
+  }
+
+  logout = () => {
+    this.setState({isAuthenticated: false, token: '', user: null})
+  };
+
+  googleResponse = (e) => {};
+
+  onFailure = (error) => {
+    alert(error);
   }
 
   render() {
@@ -171,6 +187,12 @@ class App extends React.Component {
       <div className="App">
         <UsersView></UsersView>
         <TransactionsView></TransactionsView>
+        <GoogleLogin
+            clientId="481618252783-bj1t5lhotofbb7nn6i8vqes1eat73c0u.apps.googleusercontent.com"
+            buttonText="Login"
+            onSuccess={this.googleResponse}
+            onFailure={this.googleResponse}
+        />
       </div>
     );
   }
