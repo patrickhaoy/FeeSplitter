@@ -12,71 +12,55 @@ con.connect(function(err) {
 	if (err) throw err;
 	  console.log("Connected!");
 
-	// Henry Gu pays Patrick Yin $10.28 for Chipotle
-	// var sql = "INSERT INTO transactions (title, fromID, toID, amount) VALUES ('Chipotle', 1, 2, 10.28)";
-	// con.query(sql, function(err, result) {
+	// // Insert "Patrick Yin", "Henry Gu", "Richard Tang", "Andy Fang", "Alex Ma" into Users Table
+	// var names = [
+	// 	['Patrick', 'Yin'],
+	// 	['Henry', 'Gu'],
+	// 	['Richard', 'Tang'],
+	// 	['Andy', 'Fang'],
+	// 	['Alex', 'Ma']
+	// ];
+	// con.query("INSERT INTO users (firstName, lastName) VALUES ?", [names], function(err, result) {
 	// 	if (err) throw err;
-	// 	console.log(result);
+	// 	console.log("Successful Insert: users");
 	// });
 
-	// Patrick Yin pays Henry Gu $20.28 for Chipotle
-	// var sql = "INSERT INTO transactions (title, fromID, toID, amount) VALUES ('Chipotle', 2, 1, 20.28)";
-	// con.query(sql, function(err, result) {
+	// Group1: LA Trip, Group2: East Coast Trip
+	// var groups = [
+	// 	["LA Trip"],
+	// 	["East Coast Trip"]
+	// ];
+	// con.query("INSERT INTO groups (title) VALUES ?", [groups], function(err, result) {
 	// 	if (err) throw err;
-	// 	console.log(result);
+	// 	console.log("Successful Insert: groups");
 	// });
 
-	//printTransactionsTable();
-/*
-	// Create Users Table
-	var sql = "CREATE TABLE users (userID INT(255) AUTO_INCREMENT PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))";
-	con.query(sql, function (err, result) {
-		if (err) throw err;
-		console.log("Users table created");
-	});
-  
-	// Delete Users Table
-	con.query("DROP TABLE users", function (err, result) {
-		if (err) throw err;
-		console.log("Users table deleted");
-	});
+	// 1234 in Group 1, 1345 in Group 2
+	// var userGroups = [
+	// 	[1, 1], [1, 2], [1, 3], [1, 4],
+	// 	[2, 1], [2, 3], [2, 4], [2, 5]
+	// ];
+	// con.query("INSERT INTO userGroups (groupID, userID) VALUES ?", [userGroups], function(err, result) {
+	// 	if (err) throw err;
+	// 	console.log("Successful Insert: userGroups");
+	// });
 
-	// Create Transactions Table
- 	var sql = "CREATE TABLE transactions (tranID INT(255) AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), fromID INT(255), toID INT(255), amount DEC(65, 2))";
-  	con.query(sql, function (err, result) {
-    	if (err) throw err;
-    	console.log("Transanctions table created");
-  	});
-
-	// Delete Transactions Table
-	con.query("DROP TABLE transactions", function (err, result) {
- 		if (err) throw err;
- 		console.log("Transactions table deleted");
-	});
-
-	// Insert "Patrick Yin" into Users Table
-	con.query("INSERT INTO users (firstName, lastName) VALUES ('Patrick', 'Yin')", function(err, result) {
-		if (err) throw err;
-		console.log("Successful Insert: Patrick Yin");
-	});
-*/
+	// LA and East Coast Trip Transactions
+	// var transactions = [
+	// 	["Scooter Ride", 1, 1, 2, 5],
+	// 	["Black Bear Diner", 1, 4, 3, 5],
+	// 	["Spicy Noodle", 1, 1, 2, 2.49],
+	// 	["Spicy Noodle", 1, 3, 2, 2.49],
+	// 	["Met", 2, 4, 5, 12],
+	// 	["Red Rooster Dinner", 2, 4, 5, 34.58],
+	// 	["BBQ Lunch", 2, 1, 5, 14.3],
+	// 	["Met", 2, 1, 5, 19],
+	// ];
+	// con.query("INSERT INTO transactions (title, groupID, fromID, toID, amount) VALUES ?", [transactions], function(err, result) {
+	// 	if (err) throw err;
+	// 	console.log("Successful Insert: transactions")
+	// });
 });
-
-//	Print Users Table
-function printUsersTable () {
-	con.query("SELECT * FROM users", function (err, result) {
-		if (err) throw err;
-		console.log(result);
-	});
-}
-
-//	Print Transactions Table
-function printTransactionsTable () {
-	con.query("SELECT * FROM transactions", function (err, result) {
-		if (err) throw err;
-		console.log(result);
-	});
-}
 
 
 
