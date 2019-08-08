@@ -86,24 +86,24 @@ app.get('/groups', (req, res) => {
     })
 });
 
-// app.get('/users/owe', (req, res) => {
-// 	const { user1, user2 } = req.query;
-// 	const sqlPay = "SELECT SUM(amount) AS sum FROM transactions WHERE fromID = ? and toID = ?";
-// 	var pay, receive;
-// 	con.query(sqlPay, [user1, user2], function (err, result) {
-// 		if (err) res.send(err);
-// 		else {
-// 			pay = result;
-// 			con.query(sqlPay, [user2, user1], function (err, result) {
-// 				if (err) res.send(err);
-// 				else {
-// 					receive = result; 
-// 					res.send((pay[0].sum - receive[0].sum).toFixed(2));
-// 				}
-// 			});
-// 		}
-// 	});
-// });
+app.get('/groups/users/owe', (req, res) => {
+	const { groupID, user1, user2 } = req.query;
+	const sqlPay = "SELECT SUM(amount) AS sum FROM transactions WHERE groupID = ? and fromID = ? and toID = ?";
+	var pay, receive;
+	con.query(sqlPay, [groupID, user1, user2], function (err, result) {
+		if (err) res.send(err);
+		else {
+			pay = result;
+			con.query(sqlPay, [groupID, user2, user1], function (err, result) {
+				if (err) res.send(err);
+				else {
+					receive = result; 
+					res.send((pay[0].sum - receive[0].sum).toFixed(2));
+				}
+			});
+		}
+	});
+});
 
 app.listen(process.env.PORT || 4000, () => {
     console.log('Success')
