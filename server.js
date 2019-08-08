@@ -86,7 +86,7 @@ app.get('/groups', (req, res) => {
     })
 });
 
-app.get('/groups/users/owe', (req, res) => {
+/*app.get('/groups/users/owe', (req, res) => {
 	const { groupID, user1, user2 } = req.query;
 	const sqlPay = "SELECT SUM(amount) AS sum FROM transactions WHERE groupID = ? and fromID = ? and toID = ?";
 	var pay, receive;
@@ -103,8 +103,22 @@ app.get('/groups/users/owe', (req, res) => {
 			});
 		}
 	});
+});*/
+
+app.get('/groups/users/transactions', (req, res) => {
+	const { groupID, fromID, toID } = req.query;
+	const sqlPay = "SELECT * FROM transactions WHERE groupID = ? and fromID = ? and toID = ?";
+	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	});
 });
 
+//patrickhaoy's note: Kill server = kill $(lsof -t -i:4000)
 app.listen(process.env.PORT || 4000, () => {
     console.log('Success')
 });
