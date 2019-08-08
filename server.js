@@ -86,7 +86,20 @@ app.get('/groups', (req, res) => {
     })
 });
 
-/*app.get('/groups/users/owe', (req, res) => {
+app.get('/groups/users/transactions', (req, res) => {
+	const { groupID, fromID, toID } = req.query;
+	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.tranID = groups.tranID WHERE groupID = ? and fromID = ? and toID = ?";
+	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	});
+});
+
+app.get('/groups/users/owe', (req, res) => {
 	const { groupID, user1, user2 } = req.query;
 	const sqlPay = "SELECT SUM(amount) AS sum FROM transactions WHERE groupID = ? and fromID = ? and toID = ?";
 	var pay, receive;
@@ -98,22 +111,17 @@ app.get('/groups', (req, res) => {
 				if (err) res.send(err);
 				else {
 					receive = result; 
-					res.send((pay[0].sum - receive[0].sum).toFixed(2));
+					const owe = (pay[0].sum - receive[0].sum).toFixed(2);
+					if (owe >= 0) {
+						return res.json({
+							data: [{"groupID":groupID, "fromID":user1, "toID":user2, "owedAmount":owe}]
+						})
+					}
+					return res.json({
+						data: [{"groupID":groupID, "fromID":user2, "toID":user1, "owedAmount":owe}]
+					})
 				}
 			});
-		}
-	});
-});*/
-
-app.get('/groups/users/transactions', (req, res) => {
-	const { groupID, fromID, toID } = req.query;
-	const sqlPay = "SELECT * FROM transactions WHERE groupID = ? and fromID = ? and toID = ?";
-	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
-		if (err) res.send(err);
-		else {
-			return res.json({
-				data: result
-			})
 		}
 	});
 });

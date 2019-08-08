@@ -25,17 +25,17 @@ con.connect(function(err) {
 	// 	console.log("Successful Insert: users");
 	// });
 
-	// Group1: LA Trip, Group2: East Coast Trip
+	// // Group1: LA Trip, Group2: East Coast Trip
 	// var groups = [
 	// 	["LA Trip"],
 	// 	["East Coast Trip"]
 	// ];
-	// con.query("INSERT INTO groups (title) VALUES ?", [groups], function(err, result) {
+	// con.query("INSERT INTO groups (groupTitle) VALUES ?", [groups], function(err, result) {
 	// 	if (err) throw err;
 	// 	console.log("Successful Insert: groups");
 	// });
 
-	// 1234 in Group 1, 1345 in Group 2
+	// // 1234 in Group 1, 1345 in Group 2
 	// var userGroups = [
 	// 	[1, 1], [1, 2], [1, 3], [1, 4],
 	// 	[2, 1], [2, 3], [2, 4], [2, 5]
@@ -45,7 +45,7 @@ con.connect(function(err) {
 	// 	console.log("Successful Insert: userGroups");
 	// });
 
-	// LA and East Coast Trip Transactions
+	// // LA and East Coast Trip Transactions
 	// var transactions = [
 	// 	["Scooter Ride", 1, 1, 2, 5],
 	// 	["Black Bear Diner", 1, 4, 3, 5],
@@ -56,7 +56,7 @@ con.connect(function(err) {
 	// 	["BBQ Lunch", 2, 1, 5, 14.3],
 	// 	["Met", 2, 1, 5, 19],
 	// ];
-	// con.query("INSERT INTO transactions (title, groupID, fromID, toID, amount) VALUES ?", [transactions], function(err, result) {
+	// con.query("INSERT INTO transactions (tranTitle, groupID, fromID, toID, amount) VALUES ?", [transactions], function(err, result) {
 	// 	if (err) throw err;
 	// 	console.log("Successful Insert: transactions")
 	// });

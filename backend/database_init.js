@@ -41,13 +41,13 @@ con.connect(function(err) {
     	console.log("Users table created");
   	});
   
- 	var sql = "CREATE TABLE transactions (tranID INT(255) AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), groupID INT(255), fromID INT(255), toID INT(255), amount DEC(65, 2))";
+ 	var sql = "CREATE TABLE transactions (tranID INT(255) AUTO_INCREMENT PRIMARY KEY, tranTitle VARCHAR(255), groupID INT(255), fromID INT(255), toID INT(255), amount DEC(65, 2))";
   	con.query(sql, function (err, result) {
     	if (err) throw err;
     	console.log("Transanctions table created");
   	});
 
-	var sql = "CREATE TABLE groups (groupID INT(255) AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255))";
+	var sql = "CREATE TABLE groups (groupID INT(255) AUTO_INCREMENT PRIMARY KEY, groupTitle VARCHAR(255))";
 	con.query(sql, function (err, result) {
 		if (err) throw err;
 		console.log("Groups table created");
