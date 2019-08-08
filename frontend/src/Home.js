@@ -24,12 +24,6 @@ import {
 import Navbar from './components/Navbars/Navbar';
 
 class Home extends Component {
-  state = {};
-  componentDidMount() {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    this.refs.main.scrollTop = 0;
-  }
   // calls the login method in authentication service
   login = () => {
     this.props.auth.login();
@@ -98,13 +92,11 @@ class Home extends Component {
                         <Row>
                           <Col lg="6">
                             <h1 className="display-3 text-white">
-                              A beautiful Design System{" "}
-                              <span>completed with examples</span>
+                              Manage shared expenses{" "}
+                              <span>for travel, rent, and more</span>
                             </h1>
                             <p className="lead text-white">
-                              The design system comes with four pre-built pages to
-                              help you get started faster. You can change the text and
-                              images and you're good to go.
+                              FeeSplitter is built to make exchanges seamless, effortless, and friendly.
                          </p>
                             <div className="btn-wrapper">
                               <Button
@@ -112,11 +104,9 @@ class Home extends Component {
                                 color="info"
                                 href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/alerts?ref=adsr-landing-page"
                               >
-                                <span className="btn-inner--icon mr-1">
-                                  <i className="fa fa-code" />
-                                </span>
-                                <span className="btn-inner--text">Components</span>
+                                <span className="btn-inner--text">Get Started</span>
                               </Button>
+                              {/*
                               <Button
                                 className="btn-white btn-icon mb-3 mb-sm-0 ml-1"
                                 color="default"
@@ -129,6 +119,7 @@ class Home extends Component {
                                   Download React
                              </span>
                               </Button>
+                              */}
                             </div>
                           </Col>
                         </Row>
