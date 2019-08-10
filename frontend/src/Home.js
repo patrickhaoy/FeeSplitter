@@ -21,7 +21,8 @@ import {
   Row,
   Col
 } from "reactstrap";
-import Navbar from './components/Navbars/Navbar';
+import LoginNavbar from './components/Navbars/LoginNavbar';
+import LogoutNavbar from './components/Navbars/LogoutNavbar';
 
 class Home extends Component {
   // calls the login method in authentication service
@@ -39,40 +40,16 @@ class Home extends Component {
       <div>
         {
           isAuthenticated() &&
-          <div className="container column">
-            <h5>
-              You are logged in!{' '}
-              <a
-                style={{ cursor: 'pointer' }}
-                onClick={this.logout}
-              >
-                Log Out
-              </a>.
-            </h5>
+          <div>
+            <LogoutNavbar logout = {this.logout}></LogoutNavbar>
             <App />
           </div>
         }
         {
           !isAuthenticated() && (
-            /** 
-            <div className="container column">
-              <h5>FeeSplitter</h5>
-              <h5>
-                You are not logged in! Please{' '}
-                <a
-                  style={{ cursor: 'pointer' }}
-                  onClick={this.login}
-                >
-                  Log In
-                </a>
-                {' '}to continue.
-              </h5>
-              <h6>This is the default <b><code>Home</code></b> component. The <b><code>App</code></b> component will only be visible once you authenticate.</h6>
-            </div>
-            */
             <>
               <main ref="main">
-                <Navbar login = {this.login}></Navbar>
+                <LoginNavbar login = {this.login}></LoginNavbar>
                 <div className="position-relative">
                   {/* shape Hero */}
                   <section className="section section-lg section-shaped pb-250">
@@ -102,7 +79,6 @@ class Home extends Component {
                               <Button
                                 className="btn-icon mb-3 mb-sm-0"
                                 color="info"
-                                href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/alerts?ref=adsr-landing-page"
                               >
                                 <span className="btn-inner--text">Get Started</span>
                               </Button>
@@ -153,27 +129,17 @@ class Home extends Component {
                             <Card className="card-lift--hover shadow border-0">
                               <CardBody className="py-5">
                                 <div className="icon icon-shape icon-shape-primary rounded-circle mb-4">
-                                  <i className="ni ni-check-bold" />
+                                  <i className="ni ni-circle-08" />
                                 </div>
                                 <h6 className="text-primary text-uppercase">
-                                  Download Argon
+                                  Register
                              </h6>
                                 <p className="description mt-3">
-                                  Argon is a great free UI package based on Bootstrap
-                                  4 that includes the most important components and
-                                  features.
+                                  Create an account with us and get immediate access to trip creation, transaction access, and more.
                              </p>
                                 <div>
-                                  <Badge color="primary" pill className="mr-1">
-                                    design
-                               </Badge>
-                                  <Badge color="primary" pill className="mr-1">
-                                    system
-                               </Badge>
-                                  <Badge color="primary" pill className="mr-1">
-                                    creative
-                               </Badge>
                                 </div>
+                                {/* 
                                 <Button
                                   className="mt-4"
                                   color="primary"
@@ -181,7 +147,8 @@ class Home extends Component {
                                   onClick={e => e.preventDefault()}
                                 >
                                   Learn more
-                             </Button>
+                                </Button>
+                                */}
                               </CardBody>
                             </Card>
                           </Col>
@@ -189,16 +156,15 @@ class Home extends Component {
                             <Card className="card-lift--hover shadow border-0">
                               <CardBody className="py-5">
                                 <div className="icon icon-shape icon-shape-success rounded-circle mb-4">
-                                  <i className="ni ni-istanbul" />
+                                  <i className="ni ni-chart-bar-32" />
                                 </div>
                                 <h6 className="text-success text-uppercase">
-                                  Build Something
+                                  Manage Trips
                              </h6>
                                 <p className="description mt-3">
-                                  Argon is a great free UI package based on Bootstrap
-                                  4 that includes the most important components and
-                                  features.
+                                  Get an easy-to-use dashboard to keep track of expenses between group members.
                              </p>
+                                {/* 
                                 <div>
                                   <Badge color="success" pill className="mr-1">
                                     business
@@ -218,6 +184,7 @@ class Home extends Component {
                                 >
                                   Learn more
                              </Button>
+                             */}
                               </CardBody>
                             </Card>
                           </Col>
@@ -225,16 +192,15 @@ class Home extends Component {
                             <Card className="card-lift--hover shadow border-0">
                               <CardBody className="py-5">
                                 <div className="icon icon-shape icon-shape-warning rounded-circle mb-4">
-                                  <i className="ni ni-planet" />
+                                  <i className="ni ni-credit-card" />
                                 </div>
                                 <h6 className="text-warning text-uppercase">
-                                  Prepare Launch
+                                  Divide Expenses
                              </h6>
                                 <p className="description mt-3">
-                                  Argon is a great free UI package based on Bootstrap
-                                  4 that includes the most important components and
-                                  features.
+                                  Pay back all the debts you owe at the click of a button, and get paid back instantly.
                              </p>
+                             {/** 
                                 <div>
                                   <Badge color="warning" pill className="mr-1">
                                     marketing
@@ -254,6 +220,7 @@ class Home extends Component {
                                 >
                                   Learn more
                              </Button>
+                             */}
                               </CardBody>
                             </Card>
                           </Col>
