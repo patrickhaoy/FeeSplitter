@@ -23,6 +23,7 @@ con.connect(err => {
  
 app.use(cors());
 
+// returns groups that "userID" is in
 app.get('/groups', (req, res) => {
 	const {userID} = req.query;
 	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON groups.groupID = userGroups.groupID AND userGroups.userID = users.userID WHERE userGroups.userID = ?";
@@ -36,6 +37,8 @@ app.get('/groups', (req, res) => {
 	})
 })
 
+// returns transactions paid from "fromID" to "toID" in "groupID"
+// DOES NOT return transactions paid from "toID" to "fromID" in "groupID"
 app.get('/groups/users/transactions', (req, res) => {
 	const { groupID, fromID, toID } = req.query;
 	const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
@@ -56,9 +59,13 @@ app.get('/groups/users/transactions', (req, res) => {
 	});
 });
 
+// returns amount owed in "groupID" between "user1" and "user2"
+// in format "fromID" owes "toID" "owedAmount" (owedAmount always positive)
 app.get('/groups/users/owe', (req, res) => {
 	const { groupID, user1, user2 } = req.query;
-	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.groupID = groups.groupID WHERE transactions.groupID = ? and fromID = ? and toID = ?";
+	const sqlPay = "SELECT sum(amount) as sum" +
+		" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+		" WHERE transactions.groupID = ? and fromID = ? and toID = ?";
 	var pay, receive;
 	con.query(sqlPay, [groupID, user1, user2], function (err, result) {
 		if (err) res.send(err);
@@ -75,13 +82,17 @@ app.get('/groups/users/owe', (req, res) => {
 						})
 					}
 					return res.json({
-						data: [{"groupID":groupID, "fromID":user2, "toID":user1, "owedAmount":owe}]
+						data: [{"groupID":groupID, "fromID":user2, "toID":user1, "owedAmount":-owe}]
 					})
 				}
 			});
 		}
 	});
 });
+
+
+
+/*Everything below returns table values*/
 
 app.get('/', (req, res) => {
     con.query(SELECT_ALL_USERS, (err, results) => {

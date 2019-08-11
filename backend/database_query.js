@@ -8,16 +8,28 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err) {
-	const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
-		" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
-		" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
-
-		" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
-		" JOIN users u1 ON transactions.fromID = u1.userID" +
-		" JOIN users u2 ON transactions.toID = u2.userID" +
-		" WHERE groups.groupID = ? and fromID = ? and toID = ?";
+	const sqlPay = "SELECT sum(amount) as sum FROM transactions JOIN groups ON transactions.groupID = groups.groupID WHERE transactions.groupID = ? and fromID = ? and toID = ?";
+	var pay, receive;
 	con.query(sqlPay, [1, 1, 2], function (err, result) {
-		if (err) throw err;
-		console.log(result);
+		if (err) console.log(err);
+		else {
+			pay = result;
+			con.query(sqlPay, [1, 2, 1], function (err, result) {
+				if (err) console.log(err);
+				else {
+					receive = result; 
+					const owe = (pay[0].sum - receive[0].sum).toFixed(2);
+					if (owe >= 0) {
+						console.log({
+							data: [{"groupID":1, "fromID":1, "toID":2, "owedAmount":owe}]
+						})
+					} else {
+						console.log({
+						data: [{"groupID":1, "fromID":2, "toID":1, "owedAmount":-owe}]
+					})
+					}
+				}
+			});
+		}
 	});
 });
