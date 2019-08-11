@@ -25,7 +25,7 @@ app.use(cors());
 
 app.get('/groups', (req, res) => {
 	const {userID} = req.query;
-	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE userID = ?";
+	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON groups.groupID = userGroups.groupID AND userGroups.userID = users.userID WHERE userGroups.userID = ?";
 	con.query(sql, [userID], function (err, result) {
 		if (err) res.send(err);
 		else {
@@ -38,7 +38,14 @@ app.get('/groups', (req, res) => {
 
 app.get('/groups/users/transactions', (req, res) => {
 	const { groupID, fromID, toID } = req.query;
-	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.tranID = groups.tranID WHERE groupID = ? and fromID = ? and toID = ?";
+	const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
+	" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
+	" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
+
+	" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+	" JOIN users u1 ON transactions.fromID = u1.userID" +
+	" JOIN users u2 ON transactions.toID = u2.userID" +
+	" WHERE groups.groupID = ? and fromID = ? and toID = ?";
 	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
 		if (err) res.send(err);
 		else {
