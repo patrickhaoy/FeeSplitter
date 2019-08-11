@@ -23,11 +23,53 @@ con.connect(err => {
  
 app.use(cors());
 
+// returns user info for "userID"
+app.get('/users', (req, res) => {
+	const { userID } = req.query;
+	const sql = "SELECT * FROM users WHERE userID = ?";
+	con.query(sql, [userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+});
+
+// returns transaction info for "tranID"
+app.get('/transactions', (req, res) => {
+	const { tranID } = req.query;
+	const sql = "SELECT * FROM transactions WHERE tranID = ?";
+	con.query(sql, [tranID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+});
+
 // returns groups that "userID" is in
-app.get('/groups', (req, res) => {
+app.get('/groups/users', (req, res) => {
 	const {userID} = req.query;
 	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON groups.groupID = userGroups.groupID AND userGroups.userID = users.userID WHERE userGroups.userID = ?";
 	con.query(sql, [userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
+// returns users in "groupID"
+app.get('/users/groups', (req, res) => {
+	const {groupID} = req.query;
+	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
+	con.query(sql, [groupID], function (err, result) {
 		if (err) res.send(err);
 		else {
 			return res.json({
@@ -89,8 +131,6 @@ app.get('/groups/users/owe', (req, res) => {
 		}
 	});
 });
-
-
 
 /*Everything below returns table values*/
 
