@@ -23,6 +23,59 @@ con.connect(err => {
  
 app.use(cors());
 
+app.get('/groups', (req, res) => {
+	const {userID} = req.query;
+	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE userID = ?";
+	con.query(sql, [userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
+app.get('/groups/users/transactions', (req, res) => {
+	const { groupID, fromID, toID } = req.query;
+	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.tranID = groups.tranID WHERE groupID = ? and fromID = ? and toID = ?";
+	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	});
+});
+
+app.get('/groups/users/owe', (req, res) => {
+	const { groupID, user1, user2 } = req.query;
+	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.groupID = groups.groupID WHERE transactions.groupID = ? and fromID = ? and toID = ?";
+	var pay, receive;
+	con.query(sqlPay, [groupID, user1, user2], function (err, result) {
+		if (err) res.send(err);
+		else {
+			pay = result;
+			con.query(sqlPay, [groupID, user2, user1], function (err, result) {
+				if (err) res.send(err);
+				else {
+					receive = result; 
+					const owe = (pay[0].sum - receive[0].sum).toFixed(2);
+					if (owe >= 0) {
+						return res.json({
+							data: [{"groupID":groupID, "fromID":user1, "toID":user2, "owedAmount":owe}]
+						})
+					}
+					return res.json({
+						data: [{"groupID":groupID, "fromID":user2, "toID":user1, "owedAmount":owe}]
+					})
+				}
+			});
+		}
+	});
+});
+
 app.get('/', (req, res) => {
     con.query(SELECT_ALL_USERS, (err, results) => {
         if(err) {
@@ -84,59 +137,6 @@ app.get('/groups', (req, res) => {
             })
         }
     })
-});
-
-app.get('/groups', (req, res) => {
-	const {userID} = req.query;
-	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE userID = ?";
-	con.query(sql, [userID], function (err, result) {
-		if (err) res.send(err);
-		else {
-			return res.json({
-				data: result
-			})
-		}
-	})
-})
-
-app.get('/groups/users/transactions', (req, res) => {
-	const { groupID, fromID, toID } = req.query;
-	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.tranID = groups.tranID WHERE groupID = ? and fromID = ? and toID = ?";
-	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
-		if (err) res.send(err);
-		else {
-			return res.json({
-				data: result
-			})
-		}
-	});
-});
-
-app.get('/groups/users/owe', (req, res) => {
-	const { groupID, user1, user2 } = req.query;
-	const sqlPay = "SELECT SUM(amount) AS sum FROM transactions WHERE groupID = ? and fromID = ? and toID = ?";
-	var pay, receive;
-	con.query(sqlPay, [groupID, user1, user2], function (err, result) {
-		if (err) res.send(err);
-		else {
-			pay = result;
-			con.query(sqlPay, [groupID, user2, user1], function (err, result) {
-				if (err) res.send(err);
-				else {
-					receive = result; 
-					const owe = (pay[0].sum - receive[0].sum).toFixed(2);
-					if (owe >= 0) {
-						return res.json({
-							data: [{"groupID":groupID, "fromID":user1, "toID":user2, "owedAmount":owe}]
-						})
-					}
-					return res.json({
-						data: [{"groupID":groupID, "fromID":user2, "toID":user1, "owedAmount":owe}]
-					})
-				}
-			});
-		}
-	});
 });
 
 //patrickhaoy's note: Kill server = kill $(lsof -t -i:4000)

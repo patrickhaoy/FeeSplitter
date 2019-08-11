@@ -8,8 +8,8 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err) {
-	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.groupID = groups.groupID WHERE transactions.groupID = ? and fromID = ? and toID = ?";
-	con.query(sqlPay, [1, 1, 2], function (err, result) {
+	const sqlPay = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE userID = ?";
+	con.query(sqlPay, [5], function (err, result) {
 		if (err) throw err;
 		console.log(result);
 	});
