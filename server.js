@@ -86,6 +86,19 @@ app.get('/groups', (req, res) => {
     })
 });
 
+app.get('/groups', (req, res) => {
+	const {userID} = req.query;
+	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE userID = ?";
+	con.query(sql, [userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
 app.get('/groups/users/transactions', (req, res) => {
 	const { groupID, fromID, toID } = req.query;
 	const sqlPay = "SELECT * FROM transactions JOIN groups ON transactions.tranID = groups.tranID WHERE groupID = ? and fromID = ? and toID = ?";
