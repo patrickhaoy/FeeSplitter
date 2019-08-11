@@ -25,6 +25,7 @@ import LoginNavbar from './components/Navbars/LoginNavbar';
 import LogoutNavbar from './components/Navbars/LogoutNavbar';
 
 class Home extends Component {
+
   // calls the login method in authentication service
   login = () => {
     this.props.auth.login();

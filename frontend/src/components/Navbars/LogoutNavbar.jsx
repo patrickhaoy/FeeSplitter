@@ -17,6 +17,7 @@
 */
 import React from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 // JavaScript plugin that hides or shows a component based on your scroll
 // reactstrap components
 import {
@@ -42,7 +43,9 @@ class LogoutNavbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groups: []
+      groups: [],
+      name: "",
+      profile: "false"
     };
     this.getGroups = this.getGroups.bind(this);
     this.renderGroups = this.renderGroups.bind(this);
@@ -50,6 +53,27 @@ class LogoutNavbar extends React.Component {
 
   componentDidMount() {
     this.getGroups();
+
+    var config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token")
+      }
+    };
+
+    axios
+      .get("https://feesplitter.auth0.com/userinfo", config)
+      .then(response => {
+        //console.log(json);
+        this.setState(
+          {
+            profile: response.data,
+            name: response.data["given_name"]
+          },
+          () => {
+            console.log(this.state.profile);
+          }
+        );
+      });
   }
 
   getGroups() {
@@ -177,16 +201,15 @@ class LogoutNavbar extends React.Component {
                     </DropdownToggle>
                     <DropdownMenu>
                       {this.state.groups.map(group => {
-                        return (
-                          <DropdownItem>
-                            {group.firstName}
-                          </DropdownItem>
-                        );
+                        return <DropdownItem>{group.firstName}</DropdownItem>;
                       })}
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </Nav>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
+                  <NavItem className="d-none d-lg-block ml-lg-4">
+                    <span className="nav-link-inner--text">Welcome, {this.state.name}</span>
+                  </NavItem>
                   <NavItem className="d-none d-lg-block ml-lg-4">
                     <Button
                       className="btn-neutral btn-icon"
