@@ -35,7 +35,7 @@ con.connect(function(err) {
  	// 	console.log("userGroups table deleted");
 	// });
   
-  	var sql = "CREATE TABLE users (userID INT(255) AUTO_INCREMENT PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))";
+  	var sql = "CREATE TABLE users (userID INT(255) AUTO_INCREMENT PRIMARY KEY, subID INT(255), firstName VARCHAR(255), lastName VARCHAR(255))";
   	con.query(sql, function (err, result) {
     	if (err) throw err;
     	console.log("Users table created");
