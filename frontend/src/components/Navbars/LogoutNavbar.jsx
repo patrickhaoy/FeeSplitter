@@ -18,7 +18,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // JavaScript plugin that hides or shows a component based on your scroll
-import Headroom from "headroom.js";
 // reactstrap components
 import {
   Button,
@@ -40,17 +39,38 @@ import {
 } from "reactstrap";
 
 class LogoutNavbar extends React.Component {
-  componentDidMount() {
-    let headroom = new Headroom(document.getElementById("navbar-main"));
-    // initialise
-    headroom.init();
+  constructor(props) {
+    super(props);
+    this.state = {
+      groups: []
+    };
+    this.getGroups = this.getGroups.bind(this);
+    this.renderGroups = this.renderGroups.bind(this);
   }
+
+  componentDidMount() {
+    this.getGroups();
+  }
+
+  getGroups() {
+    fetch("https://fee-splitter.herokuapp.com/groups")
+      .then(response => response.json())
+      .then(response =>
+        this.setState({
+          groups: response.data
+        })
+      );
+  }
+
+  renderGroups = ({ groupID, groupTitle }) => (
+    <div key={groupID}>{groupTitle}</div>
+  );
   render() {
     return (
       <>
         <header className="header-global">
           <Navbar
-            className="navbar-main navbar-transparent navbar-light headroom"
+            className="navbar-main navbar-solid navbar-light headroom"
             expand="lg"
             id="navbar-main"
           >
@@ -83,8 +103,8 @@ class LogoutNavbar extends React.Component {
                     </Col>
                   </Row>
                 </div>
-                {/** 
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
+                  {/* 
                   <UncontrolledDropdown nav>
                     <DropdownToggle nav>
                       <i className="ni ni-ui-04 d-lg-none mr-1" />
@@ -149,39 +169,32 @@ class LogoutNavbar extends React.Component {
                       </div>
                     </DropdownMenu>
                   </UncontrolledDropdown>
+                  */}
                   <UncontrolledDropdown nav>
                     <DropdownToggle nav>
                       <i className="ni ni-collection d-lg-none mr-1" />
-                      <span className="nav-link-inner--text">Examples</span>
+                      <span className="nav-link-inner--text">Groups</span>
                     </DropdownToggle>
                     <DropdownMenu>
-                      <DropdownItem to="/landing-page" tag={Link}>
-                        Landing
-                      </DropdownItem>
-                      <DropdownItem to="/profile-page" tag={Link}>
-                        Profile
-                      </DropdownItem>
-                      <DropdownItem to="/login-page" tag={Link}>
-                        Login
-                      </DropdownItem>
-                      <DropdownItem to="/register-page" tag={Link}>
-                        Register
-                      </DropdownItem>
+                      {this.state.groups.map(group => {
+                        return (
+                          <DropdownItem>
+                            {group.firstName}
+                          </DropdownItem>
+                        );
+                      })}
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </Nav>
-                */}
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem className="d-none d-lg-block ml-lg-4">
                     <Button
                       className="btn-neutral btn-icon"
                       color="default"
-                      onClick = {this.props.logout}
+                      onClick={this.props.logout}
                       target="_blank"
                     >
-                      <span className="nav-link-inner--text ml-1">
-                        Log Out
-                      </span>
+                      <span className="nav-link-inner--text ml-1">Log Out</span>
                     </Button>
                   </NavItem>
                 </Nav>

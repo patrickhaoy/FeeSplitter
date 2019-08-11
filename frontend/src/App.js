@@ -137,19 +137,13 @@ class TransactionsView extends React.Component {
         <Paper>
           <List>
             {this.state.transactions.map(transaction => {
-              const labelId = `checkbox-list-secondary-label-${transaction.title}`;
+              const labelId = `checkbox-list-secondary-label-${transaction.tranTitle}`;
               const labelAmount = `checkbox-list-secondary-label-${transaction.amount}`;
               return (
                 <ListItem key={transaction} button>
-                  <ListItemText id={labelId} primary={transaction.title} />
-                  <ListItemText id={labelAmount} primary={transaction.amount} />
+                  <ListItemText id={labelId} primary={transaction.tranTitle} />
                   <ListItemSecondaryAction>
-                    <Checkbox
-                      edge="end"
-                      onChange={this.handleToggle(transaction.tranID)}
-                      //checked={checked.indexOf(value) !== -1}
-                      inputProps={{ 'aria-labelledby': labelId }}
-                    />
+                    <ListItemText id={labelAmount} primary={transaction.amount} />
                   </ListItemSecondaryAction>
                 </ListItem>
               );
