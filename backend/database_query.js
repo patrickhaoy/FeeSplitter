@@ -8,7 +8,31 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err) {
-	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
+	var sql = "SELECT * FROM users";
+	con.query(sql, [1], function (err, result) {
+		if (err) console.log(err);
+		else {
+			console.log(result);
+		}
+	});
+
+	sql = "SELECT * FROM groups";
+	con.query(sql, [1], function (err, result) {
+		if (err) console.log(err);
+		else {
+			console.log(result);
+		}
+	});
+
+	sql = "SELECT * FROM userGroups";
+	con.query(sql, [1], function (err, result) {
+		if (err) console.log(err);
+		else {
+			console.log(result);
+		}
+	});
+
+	sql = "SELECT * FROM transactions";
 	con.query(sql, [1], function (err, result) {
 		if (err) console.log(err);
 		else {
