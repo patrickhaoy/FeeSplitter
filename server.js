@@ -1,3 +1,5 @@
+//import {userInfo} from './frontend/src/components/Navbars/LogoutNavbar.jsx'
+
 const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
@@ -22,6 +24,20 @@ con.connect(err => {
 });
  
 app.use(cors());
+
+// app.get('/users/addSubID', (req, res) => {
+// 	var config = {
+// 		headers: {
+// 		  Authorization: "Bearer " + localStorage.getItem("access_token")
+// 		}
+// 	  };
+  
+// 	  axios
+// 		.get("https://feesplitter.auth0.com/userinfo", config)
+// 		.then(response => {
+// 			console.log(response);
+// 		}); 
+// })
 
 // adds new group with title "groupTitle," also adds it with user "userID" under userGroups
 app.get('/users/groups/add', (req, res) => {
@@ -202,6 +218,20 @@ app.get('/groups/users', (req, res) => {
 app.get('/users/groups', (req, res) => {
 	const {groupID} = req.query;
 	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
+	con.query(sql, [groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
+// returns transactions in "groupID"
+app.get('transactions/group', (req, res) => {
+	const {groupID} = req.query;
+	const sql = "SELECT * FROM transactions WHERE groupID = ?";
 	con.query(sql, [groupID], function (err, result) {
 		if (err) res.send(err);
 		else {
