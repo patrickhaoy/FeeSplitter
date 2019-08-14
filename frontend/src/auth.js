@@ -44,6 +44,7 @@ export default class Auth {
   // removes user details from localStorage
   logout = () => {
     // Clear access token and ID token from local storage
+    document.location.href = 'https://feesplitter.auth0.com/v2/logout';
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');

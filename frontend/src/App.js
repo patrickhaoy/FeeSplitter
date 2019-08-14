@@ -19,7 +19,8 @@ class UsersView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: []
+      users: [],
+      userID: props.userID
     }
     this.getUsers = this.getUsers.bind(this);
     this.renderUsers = this.renderUsers.bind(this);
@@ -31,7 +32,7 @@ class UsersView extends React.Component {
   }
 
   getUsers() {
-    fetch('https://fee-splitter.herokuapp.com/users')
+    fetch('https://fee-splitter.herokuapp.com/users/groups?groupID=' + this.state.groupID)
       .then(response => response.json())
       .then(response =>
         this.setState(
@@ -158,12 +159,26 @@ class TransactionsView extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      groupTitle: props.groupTitle,
+      groupID: props.groupID,
+      userID: props.userID
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      groupTitle: nextProps.groupTitle,
+      groupID: nextProps.groupID,
+      userID: nextProps.userID
+    });
   }
 
   render() {
     return (
       <div className="App">
-        <UsersView></UsersView>
+        <h1>{this.state.groupTitle}, {this.state.groupID}</h1>
+        <UsersView userID = {this.state.userID}></UsersView>
         <TransactionsView></TransactionsView>
       </div>
     );

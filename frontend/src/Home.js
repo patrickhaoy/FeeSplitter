@@ -25,7 +25,16 @@ import LoginNavbar from './components/Navbars/LoginNavbar';
 import LogoutNavbar from './components/Navbars/LogoutNavbar';
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedGroupTitle: "",
+      selectedGroupID: "",
+      userID: ""
+    }
 
+    this.toggleGroup = this.toggleGroup.bind(this);
+  }
   // calls the login method in authentication service
   login = () => {
     this.props.auth.login();
@@ -34,6 +43,20 @@ class Home extends Component {
   logout = () => {
     this.props.auth.logout();
   }
+
+  toggleGroup(id, group) {
+    this.setState({
+      selectedGroupTitle: group,
+      selectedGroupID: id
+    });
+  }
+
+  setUser(id) {
+    this.setState({
+      userID: id
+    })
+  }
+
   render() {
     // calls the isAuthenticated method in authentication service
     const { isAuthenticated } = this.props.auth;
@@ -42,8 +65,8 @@ class Home extends Component {
         {
           isAuthenticated() &&
           <div>
-            <LogoutNavbar logout = {this.logout}></LogoutNavbar>
-            <App />
+            <LogoutNavbar setUser = {this.setUser} toggleGroup = {this.toggleGroup} logout = {this.logout}></LogoutNavbar>
+            <App userID = {this.state.userID} groupTitle = {this.state.selectedGroupTitle} groupID = {this.state.selectedGroupID}/>
           </div>
         }
         {

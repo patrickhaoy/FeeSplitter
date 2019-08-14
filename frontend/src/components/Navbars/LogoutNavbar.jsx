@@ -45,15 +45,14 @@ class LogoutNavbar extends React.Component {
     this.state = {
       groups: [],
       name: "",
-      profile: "false"
+      profile: "false",
+      user_id: 1,
+      groupSelectText: "Select Group ▾"
     };
     this.getGroups = this.getGroups.bind(this);
-    this.renderGroups = this.renderGroups.bind(this);
   }
 
   componentDidMount() {
-    this.getGroups();
-
     var config = {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("access_token")
@@ -71,24 +70,35 @@ class LogoutNavbar extends React.Component {
           },
           () => {
             console.log(this.state.profile);
+            //set the user id state here
           }
         );
       });
+
+      this.getGroups();
   }
 
   getGroups() {
-    fetch("https://fee-splitter.herokuapp.com/groups")
+    fetch("https://fee-splitter.herokuapp.com/groups?userID=" + this.state.user_id)
       .then(response => response.json())
       .then(response =>
         this.setState({
           groups: response.data
-        })
+        },
+        function() {
+          console.log(this.state.groups);
+        }
+        )
       );
   }
 
-  renderGroups = ({ groupID, groupTitle }) => (
-    <div key={groupID}>{groupTitle}</div>
-  );
+  toggleGroup(id, title){
+    this.props.toggleGroup(id, title)
+    this.setState({
+      groupSelectText: title + " ▾"
+    });
+  }
+
   render() {
     return (
       <>
@@ -197,11 +207,11 @@ class LogoutNavbar extends React.Component {
                   <UncontrolledDropdown nav>
                     <DropdownToggle nav>
                       <i className="ni ni-collection d-lg-none mr-1" />
-                      <span className="nav-link-inner--text">Groups</span>
+                      <span className="nav-link-inner--text">{this.state.groupSelectText}</span>
                     </DropdownToggle>
                     <DropdownMenu>
                       {this.state.groups.map(group => {
-                        return <DropdownItem>{group.firstName}</DropdownItem>;
+                        return <DropdownItem onClick={() => this.toggleGroup(group.groupID, group.groupTitle)}>{group.groupTitle}</DropdownItem>;
                       })}
                     </DropdownMenu>
                   </UncontrolledDropdown>
