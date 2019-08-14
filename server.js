@@ -91,7 +91,6 @@ app.get('/groups/users/delete', (req, res) => {
 	con.query(sql, [groupID, userID], function (err, result) {
 		if (err) res.send(err);
 		else {
-			const sql = "DELETE FROM transactions WHERE groupID = ? AND (fromID = ? OR toID = ?)";
 			con.query(sql, [groupID, userID, userID], function (err, result) {
 				if (err) res.send(err);
 				else {
