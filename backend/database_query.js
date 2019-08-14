@@ -8,35 +8,35 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err) {
-	var sql = "SELECT * FROM users";
-	con.query(sql, [1], function (err, result) {
-		if (err) console.log(err);
-		else {
-			console.log(result);
-		}
-	});
+	// var sql = "SELECT * FROM users";
+	// con.query(sql, [1], function (err, result) {
+	// 	if (err) console.log(err);
+	// 	else {
+	// 		console.log(result);
+	// 	}
+	// });
 
-	sql = "SELECT * FROM groups";
-	con.query(sql, [1], function (err, result) {
-		if (err) console.log(err);
-		else {
-			console.log(result);
-		}
-	});
+	// sql = "SELECT * FROM groups";
+	// con.query(sql, [1], function (err, result) {
+	// 	if (err) console.log(err);
+	// 	else {
+	// 		console.log(result);
+	// 	}
+	// });
 
-	sql = "SELECT * FROM userGroups";
-	con.query(sql, [1], function (err, result) {
-		if (err) console.log(err);
-		else {
-			console.log(result);
-		}
-	});
+	// sql = "SELECT * FROM userGroups";
+	// con.query(sql, [1], function (err, result) {
+	// 	if (err) console.log(err);
+	// 	else {
+	// 		console.log(result);
+	// 	}
+	// });
 
-	sql = "SELECT * FROM transactions";
-	con.query(sql, [1], function (err, result) {
-		if (err) console.log(err);
-		else {
-			console.log(result);
-		}
-	});
+	// sql = "SELECT * FROM transactions";
+	// con.query(sql, [1], function (err, result) {
+	// 	if (err) console.log(err);
+	// 	else {
+	// 		console.log(result);
+	// 	}
+	// });
 });
