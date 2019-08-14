@@ -229,9 +229,19 @@ app.get('/users/groups', (req, res) => {
 })
 
 // returns transactions in "groupID"
-app.get('transactions/groups', (req, res) => {
+app.get('/transactions/groups', (req, res) => {
 	const {groupID} = req.query;
-	const sql = "SELECT * FROM transactions WHERE groupID = ?";
+	//const sql = "SELECT * FROM transactions WHERE groupID = ?";
+	
+	const sql = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
+	" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
+	" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
+
+	" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+	" JOIN users u1 ON transactions.fromID = u1.userID" +
+	" JOIN users u2 ON transactions.toID = u2.userID" +
+	" WHERE groups.groupID = ?";
+	
 	con.query(sql, [groupID], function (err, result) {
 		if (err) res.send(err);
 		else {
