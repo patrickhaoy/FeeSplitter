@@ -217,7 +217,7 @@ app.get('/groups/users', (req, res) => {
 // returns users in "groupID"
 app.get('/users/groups', (req, res) => {
 	const {groupID} = req.query;
-	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
+	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON userGroups.userID = users.userID AND groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
 	con.query(sql, [groupID], function (err, result) {
 		if (err) res.send(err);
 		else {
