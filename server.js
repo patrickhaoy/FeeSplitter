@@ -1,3 +1,5 @@
+//import {userInfo} from './frontend/src/components/Navbars/LogoutNavbar.jsx'
+
 const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
@@ -23,11 +25,72 @@ con.connect(err => {
  
 app.use(cors());
 
-// returns user info for "userID"
-app.get('/users', (req, res) => {
-	const { userID } = req.query;
-	const sql = "SELECT * FROM users WHERE userID = ?";
-	con.query(sql, [userID], function (err, result) {
+// app.get('/users/addSubID', (req, res) => {
+// 	var config = {
+// 		headers: {
+// 		  Authorization: "Bearer " + localStorage.getItem("access_token")
+// 		}
+// 	  };
+  
+// 	  axios
+// 		.get("https://feesplitter.auth0.com/userinfo", config)
+// 		.then(response => {
+// 			console.log(response);
+// 		}); 
+// })
+
+// adds new group with title "groupTitle," also adds it with user "userID" under userGroups
+app.get('/users/groups/add', (req, res) => {
+	const {groupTitle, userID } = req.query;
+	const sqlGroup = "INSERT INTO groups (groupTitle) VALUES (?)";
+	const sqlUserGroup = "INSERT INTO userGroups (groupID, userID) VALUES (?, ?)";
+
+	con.query(sqlGroup, [groupTitle], function (err, result) {
+		if (err) res.send(err);
+		else {
+			const groupID = result.insertId;
+			con.query(sqlUserGroup, [groupID, userID], function (err, result) {
+				if (err) res.send(err);
+				else {
+					return res.json({
+						data: result
+					})
+				}
+			})
+		}
+	});
+});
+
+// deletes relations with "groupID" from GROUPS, USERGROUPS, and TRANSACTIONS
+app.get('/users/groups/delete', (req, res) => {
+	const {groupID} = req.query;
+	const sqlGroup = "DELETE FROM groups WHERE groupID = ?";
+
+	con.query(sqlGroup, [groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			con.query("DELETE FROM userGroups WHERE groupID = ?", [groupID], function (err, result) {
+				if (err) res.send(err);
+				else {
+					con.query("DELETE FROM transactions WHERE groupID = ?", [groupID], function (err, result) {
+						if (err) res.send(err);
+						else {
+							return res.json({
+								data: result
+							})
+						}
+					})
+				}
+			})
+		}
+	});
+});
+
+// inserts user with "userID" into group "groupID" in USERGROUPS
+app.get('/groups/users/add', (req, res) => {
+	const {groupID, userID} = req.query;
+	const sql = "INSERT INTO userGroups (groupID, userID) VALUES (?, ?)";
+	con.query(sql, [userID, groupID], function (err, result) {
 		if (err) res.send(err);
 		else {
 			return res.json({
@@ -37,43 +100,48 @@ app.get('/users', (req, res) => {
 	})
 });
 
-// returns transaction info for "tranID"
-app.get('/transactions', (req, res) => {
-	const { tranID } = req.query;
-	const sql = "SELECT * FROM transactions WHERE tranID = ?";
+// delete user with "userID" in group "groupID" in USERGROUPS, TRANSACTIONS
+app.get('/groups/users/delete', (req, res) => {
+	const {groupID, userID} = req.query;
+	const sql = "DELETE FROM userGroups WHERE groupID = ? AND userID = ?";
+	con.query(sql, [groupID, userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			con.query(sql, [groupID, userID, userID], function (err, result) {
+				if (err) res.send(err);
+				else {
+					return res.json({
+						data: result
+					})
+				}
+			})
+		}
+	})
+});
+
+// inserts transaction of 'amount' from 'fromID' to 'toID' in 'groupID' with title 'tranTitle' in TRANSACTIONS
+app.get('/transactions/add', (req, res) => {
+	const {tranTitle, groupID, fromID, toID, amount} = req.query;
+	const sql = "INSERT INTO transactions (tranTitle, groupID, fromID, toID, amount) VALUES (?, ?, ?, ?, ?)";
+	con.query(sql, [tranTitle, groupID, fromID, toID, amount], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+});
+
+// deletes transaction 'tranID' from TRANSACTIONS
+app.get('/transactions/delete', (req, res) => {
+	const {tranID} = req.query;
+	const sql = "DELETE FROM transactions WHERE tranID = ?";
 	con.query(sql, [tranID], function (err, result) {
 		if (err) res.send(err);
 		else {
 			return res.json({
-				data: result
-			})
-		}
-	})
-});
-
-// returns groups that "userID" is in
-app.get('/groups/users', (req, res) => {
-	const {userID} = req.query;
-	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON groups.groupID = userGroups.groupID AND userGroups.userID = users.userID WHERE userGroups.userID = ?";
-	con.query(sql, [userID], function (err, result) {
-		if (err) res.send(err);
-		else {
-			return res.json({
-				data: result
-			})
-		}
-	})
-})
-
-// returns users in "groupID"
-app.get('/users/groups', (req, res) => {
-	const {groupID} = req.query;
-	const sql = "SELECT * FROM userGroups JOIN groups ON groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
-	con.query(sql, [groupID], function (err, result) {
-		if (err) res.send(err);
-		else {
-			return res.json({
-				data: result
+			data: result
 			})
 		}
 	})
@@ -131,6 +199,50 @@ app.get('/groups/users/owe', (req, res) => {
 		}
 	});
 });
+
+// returns groups that "userID" is in
+app.get('/groups/users', (req, res) => {
+	const {userID} = req.query;
+	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON groups.groupID = userGroups.groupID AND userGroups.userID = users.userID WHERE userGroups.userID = ?";
+	con.query(sql, [userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
+// returns users in "groupID"
+app.get('/users/groups', (req, res) => {
+	const {groupID} = req.query;
+	const sql = "SELECT * FROM userGroups JOIN groups JOIN users ON userGroups.userID = users.userID AND groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
+	con.query(sql, [groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
+// returns transactions in "groupID"
+app.get('transactions/groups', (req, res) => {
+	const {groupID} = req.query;
+	const sql = "SELECT * FROM transactions WHERE groupID = ?";
+	con.query(sql, [groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
+
+// returns owe in "groupId"
 
 /*Everything below returns table values*/
 
@@ -201,3 +313,33 @@ app.get('/groups', (req, res) => {
 app.listen(process.env.PORT || 4000, () => {
     console.log('Success')
 });
+
+// Buggy functions which are currently not used
+
+// // returns user info for "userID"
+// app.get('/users', (req, res) => {
+// 	const { userID } = req.query;
+// 	const sql = "SELECT * FROM users WHERE userID = ?";
+// 	con.query(sql, [userID], function (err, result) {
+// 		if (err) res.send(err);
+// 		else {
+// 			return res.json({
+// 				data: result
+// 			})
+// 		}
+// 	})
+// });
+
+// // returns transaction info for "tranID"
+// app.get('/transactions', (req, res) => {
+// 	const { tranID } = req.query;
+// 	const sql = "SELECT * FROM transactions WHERE tranID = ?";
+// 	con.query(sql, [tranID], function (err, result) {
+// 		if (err) res.send(err);
+// 		else {
+// 			return res.json({
+// 				data: result
+// 			})
+// 		}
+// 	})
+// });

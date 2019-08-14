@@ -66,13 +66,15 @@ class LogoutNavbar extends React.Component {
         this.setState(
           {
             profile: response.data,
-            name: response.data["given_name"]
+			      name: response.data["given_name"]
           },
           () => {
             console.log(this.state.profile);
             //set the user id state here
           }
         );
+
+        //module.exports = response;
       });
 
       this.getGroups();

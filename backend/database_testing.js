@@ -13,14 +13,15 @@ con.connect(function(err) {
 	  console.log("Connected!");
 
 	// // Insert "Patrick Yin", "Henry Gu", "Richard Tang", "Andy Fang", "Alex Ma" into Users Table
+	// // SubID values are bogus
 	// var names = [
-	// 	['Patrick', 'Yin'],
-	// 	['Henry', 'Gu'],
-	// 	['Richard', 'Tang'],
-	// 	['Andy', 'Fang'],
-	// 	['Alex', 'Ma']
+	// 	['1', 'Patrick', 'Yin'],
+	// 	['2', 'Henry', 'Gu'],
+	// 	['3', 'Richard', 'Tang'],
+	// 	['4', 'Andy', 'Fang'],
+	// 	['5', 'Alex', 'Ma']
 	// ];
-	// con.query("INSERT INTO users (firstName, lastName) VALUES ?", [names], function(err, result) {
+	// con.query("INSERT INTO users (subID, firstName, lastName) VALUES ?", [names], function(err, result) {
 	// 	if (err) throw err;
 	// 	console.log("Successful Insert: users");
 	// });
