@@ -70,6 +70,42 @@ app.get('/users/groups/delete', (req, res) => {
 	});
 });
 
+// inserts user with "userID" into group "groupID" in USERGROUPS
+app.get('/groups/users/add', (req, res) => {
+	const {groupID, userID} = req.query;
+	const sql = "INSERT INTO userGroups (groupID, userID) VALUES (?, ?)";
+	con.query(sql, [userID, groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+});
+
+// delete user with "userID" in group "groupID" in USERGROUPS, TRANSACTIONS
+app.get('/groups/users/delete', (req, res) => {
+	const {groupID, userID} = req.query;
+	const sql = "DELETE FROM userGroups WHERE groupID = ? AND userID = ?";
+	con.query(sql, [groupID, userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			const sql = "DELETE FROM transactions WHERE groupID = ? AND (fromID = ? OR toID = ?)";
+			con.query(sql, [groupID, userID, userID], function (err, result) {
+				if (err) res.send(err);
+				else {
+					return res.json({
+						data: result
+					})
+				}
+			})
+		}
+	})
+});
+
+
+
 // returns transactions paid from "fromID" to "toID" in "groupID"
 // DOES NOT return transactions paid from "toID" to "fromID" in "groupID"
 app.get('/groups/users/transactions', (req, res) => {
