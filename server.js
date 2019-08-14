@@ -242,6 +242,8 @@ app.get('transactions/group', (req, res) => {
 	})
 })
 
+// returns owe in "groupId"
+
 /*Everything below returns table values*/
 
 app.get('/', (req, res) => {

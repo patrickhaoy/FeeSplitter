@@ -9,8 +9,9 @@ var con = mysql.createConnection({
 });
 
 con.connect(function(err) {
-	var userInfo = require('./frontend/src/components/Navbars/LogoutNavbar.jsx');
-	console.log(userInfo);
+	//var userInfo = require('./frontend/src/components/Navbars/LogoutNavbar.jsx');
+	//console.log(userInfo);
+
 	// var sql = "SELECT * FROM users";
 	// con.query(sql, [1], function (err, result) {
 	// 	if (err) console.log(err);
