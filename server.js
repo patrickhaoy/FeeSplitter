@@ -23,7 +23,7 @@ con.connect(err => {
  
 app.use(cors());
 
-// adds new group with title "groupTitle" relating it to user "userID" under userGroups
+// adds new group with title "groupTitle," also adds it with user "userID" under userGroups
 app.get('/users/groups/add', (req, res) => {
 	const {groupTitle, userID } = req.query;
 	const sqlGroup = "INSERT INTO groups (groupTitle) VALUES (?)";
@@ -104,7 +104,33 @@ app.get('/groups/users/delete', (req, res) => {
 	})
 });
 
+// inserts transaction of 'amount' from 'fromID' to 'toID' in 'groupID' with title 'tranTitle' in TRANSACTIONS
+app.get('/transactions/add', (req, res) => {
+	const {tranTitle, groupID, fromID, toID, amount} = req.query;
+	const sql = "INSERT INTO transactions (tranTitle, groupID, fromID, toID, amount) VALUES (?, ?, ?, ?, ?)";
+	con.query(sql, [tranTitle, groupID, fromID, toID, amount], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+});
 
+// deletes transaction 'tranID' from TRANSACTIONS
+app.get('/transactions/delete', (req, res) => {
+	const {tranID} = req.query;
+	const sql = "DELETE FROM transactions WHERE tranID = ?";
+	con.query(sql, [tranID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+			data: result
+			})
+		}
+	})
+})
 
 // returns transactions paid from "fromID" to "toID" in "groupID"
 // DOES NOT return transactions paid from "toID" to "fromID" in "groupID"
