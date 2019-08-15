@@ -1,5 +1,5 @@
-//import {userInfo} from './frontend/src/components/Navbars/LogoutNavbar.jsx'
 
+  
 const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
@@ -27,6 +27,7 @@ app.use(cors());
 
 //subID
 app.get('/subID', (req, res) => {
+	
 	return res.json({
 		data: [{"Success":"true"}]
 	})
@@ -83,7 +84,7 @@ app.get('/users/groups/delete', (req, res) => {
 app.get('/groups/users/add', (req, res) => {
 	const {groupID, userID} = req.query;
 	const sql = "INSERT INTO userGroups (groupID, userID) VALUES (?, ?)";
-	con.query(sql, [userID, groupID], function (err, result) {
+	con.query(sql, [groupID, userID], function (err, result) {
 		if (err) res.send(err);
 		else {
 			return res.json({
@@ -92,6 +93,67 @@ app.get('/groups/users/add', (req, res) => {
 		}
 	})
 });
+
+// checks if userID exists based on email. if exists, returns userID and info
+app.get('/users/email/exists', (req, res) => {
+	const {email} = req.query;
+	const sql = "SELECT COUNT(*) as count FROM users WHERE email = ?";
+	con.query(sql, [email], function (err, result) {
+		if (err) res.send(err);
+		else {
+			if (result[0].count == 0) {
+				return res.json({
+					data: [{"exists":false}]
+				})
+			}
+			else {
+				const sqlInfo = "SELECT * FROM users WHERE email = ?";
+				con.query(sqlInfo, [email], function (err, result) {
+					if (err) res.send(err);
+					else {
+						return res.json({
+							data: result
+						})
+					}
+				})
+			}
+		}
+	})
+});
+
+// combines above two methods: checks if email has userID. if yes, adds it to group. if not, denied.
+app.get('/groups/users/email/add', (req, res) => {
+	const {groupID, email} = req.query;
+	const sql = "SELECT COUNT(*) as count FROM users WHERE email = ?";
+	con.query(sql, [email], function (err, result) {
+		if (err) res.send(err);
+		else {
+			if (result[0].count == 0) {
+				return res.json({
+					data: [{"exists":false}]
+				})
+			}
+			else {
+				const sqlInfo = "SELECT userID as id FROM users WHERE email = ?";
+				con.query(sqlInfo, [email], function (err, result) {
+					if (err) res.send(err);
+					else {
+						const userID = result[0].id;
+						const sqlInsert = "INSERT INTO userGroups (groupID, userID) VALUES (?, ?)";
+						con.query(sqlInsert, [groupID, userID], function (err, result) {
+							if (err) res.send(err);
+							else {
+								return res.json({
+									data: result
+								})
+							}
+						})
+					}
+				})
+			}
+		}
+	})
+})
 
 // delete user with "userID" in group "groupID" in USERGROUPS, TRANSACTIONS
 app.get('/groups/users/delete', (req, res) => {
