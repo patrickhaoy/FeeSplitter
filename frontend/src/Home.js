@@ -34,6 +34,7 @@ class Home extends Component {
     }
 
     this.toggleGroup = this.toggleGroup.bind(this);
+    this.setUser = this.setUser.bind(this);
   }
   // calls the login method in authentication service
   login = () => {

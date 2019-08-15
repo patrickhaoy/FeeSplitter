@@ -50,6 +50,8 @@ class LogoutNavbar extends React.Component {
       groupSelectText: "Select Group ▾"
     };
     this.getGroups = this.getGroups.bind(this);
+    this.setUserID = this.setUserID.bind(this);
+    this.postSubID = this.postSubID.bind(this);
   }
 
   componentDidMount() {
@@ -70,8 +72,10 @@ class LogoutNavbar extends React.Component {
           },
           () => {
             console.log(this.state.profile);
+            this.setUserID();
+            this.postSubID();
             //set the user id state here
-          }
+          },
         );
 
         //module.exports = response;
@@ -80,17 +84,29 @@ class LogoutNavbar extends React.Component {
       this.getGroups();
   }
 
+  setUserID() {
+    this.props.setUser(this.state.user_id);
+  }
+
+  postSubID() {
+    axios.post('api/subID', { 
+      'subID' : this.state.profile,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      }
+    })
+      .then(res => console.log('SubID sent'))
+      .catch(err => console.error(err));
+  }
+
   getGroups() {
-    fetch("https://fee-splitter.herokuapp.com/groups?userID=" + this.state.user_id)
+    fetch("https://fee-splitter.herokuapp.com/groups/users?userID=" + this.state.user_id)
       .then(response => response.json())
       .then(response =>
         this.setState({
           groups: response.data
-        },
-        function() {
-          console.log(this.state.groups);
-        }
-        )
+        })
       );
   }
 

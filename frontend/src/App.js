@@ -14,14 +14,20 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 class UsersView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
+      groupID: props.groupID,
       userID: props.userID
     }
+    console.log('USERS VIEW');
+    console.log(this.state.userID)
     this.getUsers = this.getUsers.bind(this);
     this.renderUsers = this.renderUsers.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
@@ -31,6 +37,17 @@ class UsersView extends React.Component {
     this.getUsers();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      groupID: nextProps.groupID,
+      userID: nextProps.userID
+    }, 
+    function() {
+      this.getUsers();
+    }
+    );
+  }
+
   getUsers() {
     fetch('https://fee-splitter.herokuapp.com/users/groups?groupID=' + this.state.groupID)
       .then(response => response.json())
@@ -38,7 +55,9 @@ class UsersView extends React.Component {
         this.setState(
           {
             users: response.data
-          }))
+          }
+        )
+      )
   }
 
   renderUsers = ({ user_id, firstName }) => <div key={user_id}>{firstName}</div>
@@ -92,19 +111,57 @@ class TransactionsView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      transactions: []
+      transactions: [],
+      groupID: props.groupID,
+      userID: props.userID,
+      me_filter: false
     }
+    console.log(this.state.userID);
     this.getTransactions = this.getTransactions.bind(this);
     this.renderTransactions = this.renderTransactions.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
   }
 
-  componentDidMount() {
-    this.getTransactions();
+  componentDidMount(){
+    if(this.state.me_filter) {
+      this.getMyTransactions();
+    }
+    else{
+      this.getTransactions();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      groupID: nextProps.groupID,
+      userID: nextProps.userID
+    }, 
+    function() {
+      if(this.state.me_filter){
+        this.getMyTransactions();
+      }
+      else {
+        this.getTransactions();
+      }
+    }
+    );
   }
 
   getTransactions() {
-    fetch('https://fee-splitter.herokuapp.com/transactions')
+    console.log('getting all transactions')
+    fetch('https://fee-splitter.herokuapp.com/transactions/groups?groupID=' + this.state.groupID)
+      .then(response => response.json())
+      .then(response =>
+        this.setState(
+          {
+            transactions: response.data
+          }))
+  }
+
+  getMyTransactions() {
+    console.log('getting my transactions');
+    console.log('http://fee-splitter.herokuapp.com/transactions/groups/user?userID=' + this.state.userID + '&groupID=' + this.state.groupID)
+    fetch('http://fee-splitter.herokuapp.com/transactions/groups/user?userID=' + this.state.userID + '&groupID=' + this.state.groupID)
       .then(response => response.json())
       .then(response =>
         this.setState(
@@ -119,11 +176,24 @@ class TransactionsView extends React.Component {
     console.log('toggled');
   }
 
-  //[checked, setChecked] = React.useState([1]);
+  handleSwitchChange = event => {
+     this.setState({
+       me_filter: event.target.checked
+     },
+     function() {
+       if(this.state.me_filter){
+         this.getMyTransactions();
+       }
+       else{
+         this.getTransactions();
+       }
+     }
+     );
+  };
 
   render() {
     return (
-      <div style={{ width: '20%', margin: '1em', padding: '0.5em' }} className="Transactions">
+      <div style={{ width: '40%', margin: '1em', padding: '0.5em' }} className="Transactions">
         <AppBar position="static">
           <Toolbar>
             <IconButton edge="start" className="IconButton" color="inherit" aria-label="menu">
@@ -132,6 +202,7 @@ class TransactionsView extends React.Component {
             <Typography style={{ flex: 1 }} variant="h6" className="Title">
               Transactions
           </Typography>
+            <FormControlLabel defaultToggled={false} onChange = {this.handleSwitchChange} control={<Switch value="checkedA" />} label="Me" />
             <Button color="inherit">Add</Button>
           </Toolbar>
         </AppBar>
@@ -140,11 +211,13 @@ class TransactionsView extends React.Component {
             {this.state.transactions.map(transaction => {
               const labelId = `checkbox-list-secondary-label-${transaction.tranTitle}`;
               const labelAmount = `checkbox-list-secondary-label-${transaction.amount}`;
+              const amount = `$${transaction.amount}`;
+              const payMessage = `${transaction.fromID_firstName} ${transaction.fromID_lastName} paid ${transaction.toID_firstName} ${transaction.toID_lastName}`;
               return (
                 <ListItem key={transaction} button>
-                  <ListItemText id={labelId} primary={transaction.tranTitle} />
+                  <ListItemText id={labelId} primary={transaction.tranTitle} secondary={payMessage} />
                   <ListItemSecondaryAction>
-                    <ListItemText id={labelAmount} primary={transaction.amount} />
+                    <ListItemText id={labelAmount} primary={amount} />
                   </ListItemSecondaryAction>
                 </ListItem>
               );
@@ -177,9 +250,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <h1>{this.state.groupTitle}, {this.state.groupID}</h1>
-        <UsersView userID = {this.state.userID}></UsersView>
-        <TransactionsView></TransactionsView>
+        <UsersView groupID = {this.state.groupID} userID = {this.state.userID}></UsersView>
+        <TransactionsView groupID = {this.state.groupID} userID = {this.state.userID}></TransactionsView>
       </div>
     );
   }
