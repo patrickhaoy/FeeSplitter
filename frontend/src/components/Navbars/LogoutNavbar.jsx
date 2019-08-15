@@ -74,7 +74,7 @@ class LogoutNavbar extends React.Component {
           }
         );
 
-        //module.exports = response;
+        //response;
       });
 
       this.getGroups();

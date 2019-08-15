@@ -25,6 +25,12 @@ con.connect(err => {
  
 app.use(cors());
 
+app.get('/subID', (req, res) => {
+	return res.json({
+		data: [{"Success":"true"}]
+	})
+})
+
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
 app.get('/users/groups/add', (req, res) => {
 	const {groupTitle, userID } = req.query;
@@ -232,6 +238,40 @@ app.get('/groups/users/owe', (req, res) => {
 	});
 });
 
+// returns owes in "groupID"
+app.get('/owe/groups', (req, res) => {
+	const {groupID} = req.query;
+	const sqlCount = "SELECT COUNT(*) as count FROM userGroups WHERE groupID = ?";
+	
+	con.query(sqlCount, [groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			const count = result[0].count;
+			const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
+				" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
+				" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
+
+				" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+				" JOIN users u1 ON transactions.fromID = u1.userID" +
+				" JOIN users u2 ON transactions.toID = u2.userID" +
+				" WHERE groups.groupID = ? and fromID = ? and toID = ?";
+
+			for (i = 0; i < count; i++) {
+				for (j = 1; j < count; j++) {
+					con.query(sqlPay, [i, j], function (err, result) {
+						if (err) res.send(err);
+						else {
+							return res.json({
+								data: result
+							})
+						}
+					})
+				}
+			}
+		}
+	})
+})
+
 // returns groups that "userID" is in
 app.get('/groups/users', (req, res) => {
 	const {userID} = req.query;
@@ -259,30 +299,6 @@ app.get('/users/groups', (req, res) => {
 		}
 	})
 })
-
-// // returns owe in "groupID"
-// app.get('/owe/groups', (req, res) => {
-// 	const {groupID} = req.query;
-// 	const sqlCount = "SELECT COUNT(*) as count FROM userGroups WHERE groupID = ?";
-	
-// 	con.query(sqlCount, [groupID], function (err, result) {
-// 		if (err) res.send(err);
-// 		else {
-// 			const count = result[0].count;
-// 			const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
-// 				" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
-// 				" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
-
-// 				" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
-// 				" JOIN users u1 ON transactions.fromID = u1.userID" +
-// 				" JOIN users u2 ON transactions.toID = u2.userID" +
-// 				" WHERE groups.groupID = ? and fromID = ? and toID = ?";
-
-// 			con.query()
-// 		}
-// 	})
-// })
-
 
 /*Everything below returns table values*/
 
