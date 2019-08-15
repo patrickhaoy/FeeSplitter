@@ -25,21 +25,7 @@ con.connect(err => {
  
 app.use(cors());
 
-// app.get('/users/addSubID', (req, res) => {
-// 	var config = {
-// 		headers: {
-// 		  Authorization: "Bearer " + localStorage.getItem("access_token")
-// 		}
-// 	  };
-  
-// 	  axios
-// 		.get("https://feesplitter.auth0.com/userinfo", config)
-// 		.then(response => {
-// 			console.log(response);
-// 		}); 
-// })
-
-// adds new group with title "groupTitle," also adds it with user "userID" under userGroups
+// adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
 app.get('/users/groups/add', (req, res) => {
 	const {groupTitle, userID } = req.query;
 	const sqlGroup = "INSERT INTO groups (groupTitle) VALUES (?)";
@@ -149,16 +135,16 @@ app.get('/transactions/delete', (req, res) => {
 
 // returns transactions paid from "fromID" to "toID" in "groupID"
 // DOES NOT return transactions paid from "toID" to "fromID" in "groupID"
-app.get('/groups/users/transactions', (req, res) => {
+app.get('/transactions/groups/users', (req, res) => {
 	const { groupID, fromID, toID } = req.query;
-	const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
+	const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, FORMAT(amount, 2) as amount," +
 	" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
 	" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
 
 	" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
 	" JOIN users u1 ON transactions.fromID = u1.userID" +
 	" JOIN users u2 ON transactions.toID = u2.userID" +
-	" WHERE groups.groupID = ? and fromID = ? and toID = ?";
+	" WHERE groups.groupID = ? and fromID = ? and toID = ? ORDER BY tranID DESC";
 	con.query(sqlPay, [groupID, fromID, toID], function (err, result) {
 		if (err) res.send(err);
 		else {
@@ -168,6 +154,52 @@ app.get('/groups/users/transactions', (req, res) => {
 		}
 	});
 });
+
+// returns transactions involving "userID" in "groupID"
+app.get('/transactions/groups/user', (req, res) => {
+	const { userID, groupID } = req.query;
+	//const sql = "SELECT * FROM transactions WHERE (fromID = ? OR toID = ?) AND groupID = ? ORDER BY tranID DESC";
+	const sql = "SELECT groups.groupID, groupTitle, tranID, tranTitle, FORMAT(amount, 2) as amount," +
+	" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
+	" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
+
+	" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+	" JOIN users u1 ON transactions.fromID = u1.userID" +
+	" JOIN users u2 ON transactions.toID = u2.userID" +
+	" WHERE groups.groupID = ? and (fromID = ? OR toID = ?) ORDER BY tranID DESC";
+	con.query(sql, [groupID, userID, userID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+});
+
+// returns transactions in "groupID"
+app.get('/transactions/groups', (req, res) => {
+	const {groupID} = req.query;
+	//const sql = "SELECT * FROM transactions WHERE groupID = ?";
+	
+	const sql = "SELECT groups.groupID, groupTitle, tranID, tranTitle, FORMAT(amount, 2) as amount," +
+	" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
+	" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
+
+	" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+	" JOIN users u1 ON transactions.fromID = u1.userID" +
+	" JOIN users u2 ON transactions.toID = u2.userID" +
+	" WHERE groups.groupID = ? ORDER BY tranID DESC";
+	
+	con.query(sql, [groupID], function (err, result) {
+		if (err) res.send(err);
+		else {
+			return res.json({
+				data: result
+			})
+		}
+	})
+})
 
 // returns amount owed in "groupID" between "user1" and "user2"
 // in format "fromID" owes "toID" "owedAmount" (owedAmount always positive)
@@ -228,31 +260,29 @@ app.get('/users/groups', (req, res) => {
 	})
 })
 
-// returns transactions in "groupID"
-app.get('/transactions/groups', (req, res) => {
-	const {groupID} = req.query;
-	//const sql = "SELECT * FROM transactions WHERE groupID = ?";
+// // returns owe in "groupID"
+// app.get('/owe/groups', (req, res) => {
+// 	const {groupID} = req.query;
+// 	const sqlCount = "SELECT COUNT(*) as count FROM userGroups WHERE groupID = ?";
 	
-	const sql = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
-	" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
-	" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
+// 	con.query(sqlCount, [groupID], function (err, result) {
+// 		if (err) res.send(err);
+// 		else {
+// 			const count = result[0].count;
+// 			const sqlPay = "SELECT groups.groupID, groupTitle, tranID, tranTitle, amount, " +
+// 				" fromID, u1.firstName as fromID_firstName, u1.lastName as fromID_lastName," +
+// 				" toID, u2.firstName as toID_firstName, u2.lastname as toID_lastName " +
 
-	" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
-	" JOIN users u1 ON transactions.fromID = u1.userID" +
-	" JOIN users u2 ON transactions.toID = u2.userID" +
-	" WHERE groups.groupID = ?";
-	
-	con.query(sql, [groupID], function (err, result) {
-		if (err) res.send(err);
-		else {
-			return res.json({
-				data: result
-			})
-		}
-	})
-})
+// 				" FROM transactions JOIN groups ON transactions.groupID = groups.groupID" +
+// 				" JOIN users u1 ON transactions.fromID = u1.userID" +
+// 				" JOIN users u2 ON transactions.toID = u2.userID" +
+// 				" WHERE groups.groupID = ? and fromID = ? and toID = ?";
 
-// returns owe in "groupId"
+// 			con.query()
+// 		}
+// 	})
+// })
+
 
 /*Everything below returns table values*/
 
