@@ -10,9 +10,8 @@ var con = mysql.createConnection({
 
 //users.userID, subID, firstName, lastName
 con.connect(function(err) {
-	const sql = "SELECT *" +
-	+ " FROM userGroups JOIN groups JOIN users ON userGroups.userID = users.userID AND groups.groupID = userGroups.groupID WHERE groups.groupID = ?";
-	con.query(sql, 1, function (err, result) {
+	const sql = "SELECT FORMAT(amount, 2) FROM transactions WHERE tranID=1"
+	con.query(sql, function (err, result) {
 		if (err) return err;
 		else {
 			console.log(result);
