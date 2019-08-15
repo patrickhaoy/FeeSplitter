@@ -94,6 +94,33 @@ app.get('/groups/users/add', (req, res) => {
 	})
 });
 
+// checks if userID exists based on email. if exists, returns userID and info
+app.get('/users/email/exists', (req, res) => {
+	const {email} = req.query;
+	const sql = "SELECT COUNT(*) as count FROM users WHERE email = ?";
+	con.query(sql, [email], function (err, result) {
+		if (err) res.send(err);
+		else {
+			if (result[0].count == 0) {
+				return res.json({
+					data: [{"exists":false}]
+				})
+			}
+			else {
+				const sqlInfo = "SELECT * FROM users WHERE email = ?";
+				con.query(sqlInfo, [email], function (err, result) {
+					if (err) res.send(err);
+					else {
+						return res.json({
+							data: result
+						})
+					}
+				})
+			}
+		}
+	})
+});
+
 // delete user with "userID" in group "groupID" in USERGROUPS, TRANSACTIONS
 app.get('/groups/users/delete', (req, res) => {
 	const {groupID, userID} = req.query;
