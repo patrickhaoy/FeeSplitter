@@ -46,7 +46,7 @@ class LogoutNavbar extends React.Component {
       groups: [],
       name: "",
       profile: "false",
-      user_id: 1,
+      user_id: 2,
       groupSelectText: "Select Group ▾"
     };
     this.getGroups = this.getGroups.bind(this);

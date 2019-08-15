@@ -55,7 +55,8 @@ class Home extends Component {
   setUser(id) {
     this.setState({
       userID: id
-    })
+    });
+
   }
 
   render() {
