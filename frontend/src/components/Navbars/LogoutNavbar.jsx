@@ -64,7 +64,10 @@ class LogoutNavbar extends React.Component {
     axios
       .get("https://feesplitter.auth0.com/userinfo", config)
       .then(response => {
-        //console.log(json);
+        console.log("**********" + response.data["sub"]);
+
+        
+
         this.setState(
           {
             profile: response.data,
@@ -78,7 +81,6 @@ class LogoutNavbar extends React.Component {
           },
         );
 
-        //response;
       });
 
       this.getGroups();

@@ -1,5 +1,5 @@
-//import {userInfo} from './frontend/src/components/Navbars/LogoutNavbar.jsx'
 
+  
 const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
@@ -27,6 +27,7 @@ app.use(cors());
 
 //subID
 app.get('/subID', (req, res) => {
+	
 	return res.json({
 		data: [{"Success":"true"}]
 	})
