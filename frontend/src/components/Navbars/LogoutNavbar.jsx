@@ -127,7 +127,7 @@ class LogoutNavbar extends React.Component {
     axios.post('https://fee-splitter.herokuapp.com/axios/userInfo', { 
       body : bodyContent,
       headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/x-www-form-urlencoded',
         "Access-Control-Allow-Origin": "*",
       }
     })

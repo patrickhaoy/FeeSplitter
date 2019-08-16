@@ -5,7 +5,12 @@ const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
 var app = express();
-//var bodyParser = require('body-parser');
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded());
 
 const SELECT_ALL_USERS = 'SELECT * FROM users';
 const SELECT_ALL_TRANSACTIONS = 'SELECT * FROM transactions';
@@ -31,10 +36,8 @@ app.use(cors());
 // parameters sent with 
 
 app.post('/axios/userInfo', function(req, res) {
-    //var subID = req.body.sub;
-	//var email = req.body.email
-	//res.send(subID + ' ' + email);
-	res.send("getting user info.....");
+    const sub = req.body.sub;
+	res.send(`Got subID ${sub}`);
 });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
