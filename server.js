@@ -77,10 +77,15 @@ app.post('/userInfo', function(req, res) {
 
 app.get('/userInfo/get', (req, res, next) => {
 	const email = String(req.query.email)
-	con.query("SELECT * FROM users WHERE email = ?", [ email ], (q_err, q_res) => {
-	  res.json(q_res.rows)
+	con.query("SELECT * FROM users WHERE email = ?", [ email ], (err, result) => {
+		if (err) res.send(err);
+		else {
+			console.log(result);
+			return res.json({
+				data: result
+			})
+		}
 	});
-	console.log(res.json(q_res.rows));
   });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
