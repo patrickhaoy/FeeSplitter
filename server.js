@@ -52,15 +52,18 @@ app.post('/userInfo', function(req, res) {
 	//res.send(`${email} | ${sub} | ${firstName} | ${lastName}`);
 	
 	const sqlCheck = "SELECT COUNT(*) as count from USERS WHERE email = ?";
+	//console.log(email + " " + sub + " " + firstName + " " + lastName);
 	con.query(sqlCheck, [email], function (err, result) {
 		if (err) res.send(err);
 		else {
 			if (result[0].count == 0) {
+				//console.log("R U TROLLING?");
 				const sql = "INSERT INTO users (subID, email, firstName, lastName) VALUES (?, ?, ?, ?)";
-				console.log(sub + " " + email);
+				//console.log(sub + " " + email);
 				con.query(sql, [sub, email, firstName, lastName], function (err, result) {
 					if (err) res.send(err);
 					else {
+						return (result);
 						return res.json({
 							data: result
 						})
