@@ -47,7 +47,9 @@ app.use(cors());
 app.post('/axios/userInfo', function(req, res) {
 	const email = req.body.email;
 	const sub = req.body.subID;
-    res.send(`${email} | ${sub}`)
+	const firstName = req.body.firstName;
+	const lastName = req.body.lastName;
+    res.send(`${email} | ${sub} | ${firstName} | ${lastName}`)
 });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS

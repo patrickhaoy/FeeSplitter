@@ -158,13 +158,13 @@ class UsersView extends React.Component {
               onChange={this.updateEmailInput}
               inputProps={{ "aria-label": "bare" }}
             />
-            {/* <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
-              Add
-            </ListItemText> */}
+            {/*  */}
 
             <div>
-                <button onClick={this.togglePopup.bind(this)}> Add</button>
-
+                {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
+                <ListItemText id="addEmailButton" onClick={this.togglePopup.bind(this)}>
+                  Add
+                </ListItemText>
                 {this.state.showPopup ?
                   <AddUsersPopup
                     text='Click "Close Button" to hide popup'
@@ -305,11 +305,14 @@ class TransactionsView extends React.Component {
       groupID: props.groupID,
       userID: props.userID,
       me_filter: false,
+      editMode: false,
+      editText: "Edit",
       showPopup: false
     };
     this.getTransactions = this.getTransactions.bind(this);
     this.renderTransactions = this.renderTransactions.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.toggleEditMode = this.toggleEditMode.bind(this);
   }
 
   componentDidMount() {
@@ -370,6 +373,26 @@ class TransactionsView extends React.Component {
     console.log("toggled");
   }
 
+  toggleEditMode() {
+    this.setState(
+      {
+        editMode: !this.state.editMode
+      },
+      function() {
+        if(this.state.editMode){
+          this.setState({
+            editText: 'Done'
+          });
+        }
+        else{
+          this.setState({
+            editText: 'Edit'
+          });
+        }
+      }
+    );
+  }
+
   handleSwitchChange = event => {
     this.setState(
       {
@@ -410,7 +433,7 @@ class TransactionsView extends React.Component {
               control={<Switch value="checkedA" />}
               label="Me"
             />
-            <Button color="inherit">Add</Button>
+            <Button onclick = {this.toggleEditMode} color="inherit">Edit</Button>
           </Toolbar>
         </AppBar>
         <Paper>
