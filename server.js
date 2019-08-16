@@ -49,9 +49,8 @@ app.post('/axios/userInfo', function(req, res) {
 	const sub = req.body.subID;
 	const firstName = req.body.firstName;
 	const lastName = req.body.lastName;
-	res.send(`${email} | ${sub} | ${firstName} | ${lastName}`);
+	//res.send(`${email} | ${sub} | ${firstName} | ${lastName}`);
 	
-	res.redirect(307, '/axios/userInfo/get')
 	const sqlCheck = "SELECT COUNT(*) as count from USERS WHERE email = ?";
 	con.query(sqlCheck, [email], function (err, result) {
 		if (err) res.send(err);
