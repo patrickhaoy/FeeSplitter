@@ -20,6 +20,7 @@ import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Clear from "@material-ui/icons/Clear";
+import Draggable from 'react-draggable';
 
 class UsersView extends React.Component {
   constructor(props) {
@@ -221,13 +222,16 @@ class AddUsersPopup extends React.Component {
   render() {
     return (
       <div className='popup'>
-        <div className='popup_inner'>
-          <div className='popup_header'>
-            <h1>User Not Registered</h1>
+        <Draggable>
+          <div className='popup_inner'>
+            <div className='popup_header'>
+              <h1>User Not Registered</h1>
+            </div>
+            <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
+            <div className='div-center'><Button type = "button" onClick={this.props.closePopup}>Close</Button></div>
+            
           </div>
-          <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
-        <button type = "button" onClick={this.props.closePopup}>Close</button>
-        </div>
+        </Draggable>
       </div>
     );
   }
