@@ -44,7 +44,7 @@ app.use(cors());
 // POST http://localhost:4000/axios/userInfo
 // parameters sent with 
 
-app.post('/axios/userInfo', function(req, res) {
+app.post('/userInfo', function(req, res) {
 	const email = req.body.email;
 	const sub = req.body.subID;
 	const firstName = req.body.firstName;
@@ -74,6 +74,14 @@ app.post('/axios/userInfo', function(req, res) {
 		}
 	})
 });
+
+router.get('/api/get/userprofilefromdb', (req, res, next) => {
+	const email = String(req.query.email)
+	con.query("SELECT * FROM users WHERE email = ?", [ email ], (q_err, q_res) => {
+	  res.json(q_res.rows)
+	});
+	console.log(res.json(q_res.rows));
+  });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
 app.get('/users/groups/add', (req, res) => {
