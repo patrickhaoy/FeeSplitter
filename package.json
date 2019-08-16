@@ -4,6 +4,7 @@
   "description": "Application for financial logistics on trips",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "create-react-app": "^3.0.1",
     "express": "^4.17.1",

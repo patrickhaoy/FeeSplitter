@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-var query = require('./database_query.js');
 
 var con = mysql.createConnection({
 	host: "den1.mysql6.gear.host",

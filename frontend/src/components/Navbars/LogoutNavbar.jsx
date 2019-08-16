@@ -38,6 +38,22 @@ import {
   Col,
   UncontrolledTooltip
 } from "reactstrap";
+//import { setCookie, getCookie, removeCookie } from 'react-cookies'
+
+// var mysql = require('mysql');
+
+// var con = mysql.createConnection({
+// 	host: "den1.mysql6.gear.host",
+// 	user: "feesplitter",
+// 	password: "Tj2vQV?_y564",
+// 	database: "feesplitter"
+// });
+
+/*
+var jsdom = require('jsdom');
+var window = jsdom.jsdom().parentWindow;
+var Cookies = require('cookies-js')(window);
+*/
 
 class LogoutNavbar extends React.Component {
   constructor(props) {
@@ -65,8 +81,20 @@ class LogoutNavbar extends React.Component {
       .get("https://feesplitter.auth0.com/userinfo", config)
       .then(response => {
         console.log("**********" + response.data["sub"]);
-
         
+        // Add to database 
+        
+        // axios.post('/axios/userInfo', function(req, res) {
+        //   return res;
+        // })
+
+        // axios.post('/axios/userInfo', response)
+        //   .then(res => {
+        //     return res;
+        //   })
+
+        // setCookie('userInfo', response.data["sub"], {
+        // })
 
         this.setState(
           {
@@ -91,7 +119,7 @@ class LogoutNavbar extends React.Component {
   }
 
   postSubID() {
-    axios.post('api/subID', { 
+    axios.post('/axios/userInfo', { 
       'subID' : this.state.profile,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
