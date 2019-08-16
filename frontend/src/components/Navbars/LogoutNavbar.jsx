@@ -119,8 +119,8 @@ class LogoutNavbar extends React.Component {
   }
 
   postSubID() {
-    axios.post('/axios/userInfo', { 
-      'subID' : this.state.profile,
+    axios.post('https://fee-splitter.herokuapp.com/axios/userInfo', { 
+      body : this.state.profile,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
         "Access-Control-Allow-Origin": "*",

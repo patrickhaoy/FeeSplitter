@@ -34,7 +34,7 @@ app.post('/axios/userInfo', function(req, res) {
     //var subID = req.body.sub;
 	//var email = req.body.email
 	//res.send(subID + ' ' + email);
-	res.send("getting user info.....");
+	//res.send("getting user info.....");
 });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
