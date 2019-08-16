@@ -25,14 +25,6 @@ con.connect(err => {
  
 app.use(cors());
 
-//subID
-app.get('/subID', (req, res) => {
-	
-	return res.json({
-		data: [{"Success":"true"}]
-	})
-})
-
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
 app.get('/users/groups/add', (req, res) => {
 	const {groupTitle, userID } = req.query;
