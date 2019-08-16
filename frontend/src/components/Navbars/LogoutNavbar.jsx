@@ -127,12 +127,13 @@ class LogoutNavbar extends React.Component {
       lastName: this.state.profile.family_name
     }
 
-    axios.post('http://localhost:4000/axios/userInfo',  bodyContent, {
+    axios.post('http://localhost:4000/userInfo',  bodyContent, {
       headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       "Access-Control-Allow-Origin": "*",
       }
     })
+      .then(() => axios.get('http://localhost:4000/userInfo/get', {params: {email: this.state.profile.email}} ))
       .then(res => console.log(res))
       .catch(err => console.error(err));
   }
