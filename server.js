@@ -36,7 +36,7 @@ app.use(cors());
 // parameters sent with 
 
 app.post('/axios/userInfo', function(req, res) {
-    const sub = req.body.sub;
+    const sub = req.body.subID;
 	res.send(`Got subID ${sub}`);
 });
 
