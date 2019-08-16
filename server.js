@@ -46,7 +46,20 @@ app.use(cors());
 
 app.post('/axios/userInfo', function(req, res) {
 	const email = req.body.email;
-    res.send(`${email}`)
+	const sub = req.body.subID;
+	//res.send(`${email} | ${sub}`)
+	
+	const sqlCheck = "SELECT COUNT(*) as count from USERS WHERE email = ?";
+	con.query(sqlCheck, [email], function (err, result) {
+		if (err) res.send(err);
+		else {
+			if (result[0].count == 0) {
+				const sql = "INSERT INTO users (subID, email, firstName, lastName) VALUES (?, ?, ?, ?)";
+
+				con.query(sql, [sub, email, ])
+			}
+		}
+	})
 });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
