@@ -226,7 +226,7 @@ class AddUsersPopup extends React.Component {
             <h1>User Not Registered</h1>
           </div>
           <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
-        <button onClick={this.props.closePopup}>Close</button>
+        <button type = "button" onClick={this.props.closePopup}>Close</button>
         </div>
       </div>
     );
