@@ -5,7 +5,7 @@ const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
 var app = express();
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 
 const SELECT_ALL_USERS = 'SELECT * FROM users';
 const SELECT_ALL_TRANSACTIONS = 'SELECT * FROM transactions';
@@ -27,17 +27,17 @@ con.connect(err => {
  
 app.use(cors());
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+//app.use(bodyParser.json()); // support json encoded bodies
+//app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // POST http://localhost:4000/axios/userInfo
 // parameters sent with 
-app.post('/axios/userInfo', function(req, res) {
-    var subID = req.body.sub;
-    var email = req.body.email
+// app.post('/axios/userInfo', function(req, res) {
+//     var subID = req.body.sub;
+//     var email = req.body.email
 
-    res.send(subID + ' ' + email);
-});
+//     res.send(subID + ' ' + email);
+// });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
 app.get('/users/groups/add', (req, res) => {
@@ -135,9 +135,7 @@ app.get('/groups/users/email/add', (req, res) => {
 		if (err) res.send(err);
 		else {
 			if (result[0].count == 0) {
-				return res.json({
-					data: [{"exists":false}]
-				})
+				res.status(404).send('User not found');
 			}
 			else {
 				const sqlInfo = "SELECT userID as id FROM users WHERE email = ?";

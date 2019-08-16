@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import ReactDOM from "react-dom";
 import logo from "./logo.svg";
 import "./App.css";
@@ -80,6 +80,11 @@ class UsersView extends React.Component {
 
   getUserEmail() {
     console.log(this.state.emailInput);
+    // fetch(
+    //   'https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=' + this.state.groupID + '&email=' + this.state.emailInput
+    // )
+    //   .then(response => response.json())
+    //   .then(response => console.log('Success:', JSON.stringify(response)))
   }
 
   toggleEditMode() {
@@ -100,6 +105,12 @@ class UsersView extends React.Component {
         }
       }
     );
+  }
+
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    })
   }
 
   updateEmailInput(e) {
@@ -147,9 +158,21 @@ class UsersView extends React.Component {
               onChange={this.updateEmailInput}
               inputProps={{ "aria-label": "bare" }}
             />
-            <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
+            {/* <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
               Add
-            </ListItemText>
+            </ListItemText> */}
+
+            <div>
+                <button onClick={this.togglePopup.bind(this)}> Add</button>
+
+                {this.state.showPopup ?
+                  <AddUsersPopup
+                    text='Click "Close Button" to hide popup'
+                    closePopup={this.togglePopup.bind(this)}
+                  />
+                  : null
+                }
+            </div>
           </ListItem>
           <List>
             {this.state.users.map(user => {
@@ -194,6 +217,86 @@ class UsersView extends React.Component {
   }
 }
 
+class AddUsersPopup extends React.Component {
+  render() {
+    return (
+      <div className='popup'>
+        <div className='popup_inner'>
+          <div className='popup_header'>
+            <h1>User Not Registered</h1>
+          </div>
+          <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
+        <button onClick={this.props.closePopup}>Close</button>
+        </div>
+      </div>
+    );
+  }
+}
+
+// class OweView extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       owes = [],
+//       groupID = props.groupID,
+//       userID = props.userID
+//     };
+//   }
+//   this.getOwes = this.getOwes.bind(this);
+
+//   componentDidMount() {
+//     if (this.state.me_filter) {
+//       this.getMyOwes();
+//     } else {
+//       this.getOwes();
+//     }
+//   }
+
+//   componentWillRecieveProps(nextProps) {
+//     this.setState(
+//       {
+//         groupID: nextProps.groupID,
+//         userID: nextProps.userID
+//       },
+//       function() {
+//         if (this.state.me_filter) {
+//           this.getMyOwes();
+//         } else {
+//           this.getOwes();
+//         }
+//       }
+//     );
+//   }
+
+//   getOwes() {
+//     fetch(
+//       "https://fee-splitter.herokuapp.com/transactions/groups?groupID=" +
+//         this.state.groupID
+//     )
+//       .then(response => response.json())
+//       .then(response =>
+//         this.setState({
+//           owes: response.data
+//         })
+//       );
+//   }
+
+//   getMyTransactions() {
+//     fetch(
+//       "http://fee-splitter.herokuapp.com/transactions/groups/user?userID=" +
+//         this.state.userID +
+//         "&groupID=" +
+//         this.state.groupID
+//     )
+//       .then(response => response.json())
+//       .then(response =>
+//         this.setState({
+//           transactions: response.data
+//         })
+//       );
+//   }
+// }
+
 class TransactionsView extends React.Component {
   constructor(props) {
     super(props);
@@ -201,7 +304,8 @@ class TransactionsView extends React.Component {
       transactions: [],
       groupID: props.groupID,
       userID: props.userID,
-      me_filter: false
+      me_filter: false,
+      showPopup: false
     };
     this.getTransactions = this.getTransactions.bind(this);
     this.renderTransactions = this.renderTransactions.bind(this);
