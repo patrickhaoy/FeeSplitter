@@ -433,7 +433,7 @@ class TransactionsView extends React.Component {
               control={<Switch value="checkedA" />}
               label="Me"
             />
-            <Button onclick = {this.toggleEditMode} color="inherit">Edit</Button>
+            <Button onClick = {this.toggleEditMode} color="inherit">{this.state.editText}</Button>
           </Toolbar>
         </AppBar>
         <Paper>
@@ -451,18 +451,35 @@ class TransactionsView extends React.Component {
               } paid ${transaction.toID_firstName} ${
                 transaction.toID_lastName
               }`;
-              return (
-                <ListItem key={transaction} button>
-                  <ListItemText
-                    id={labelId}
-                    primary={transaction.tranTitle}
-                    secondary={payMessage}
-                  />
-                  <ListItemSecondaryAction>
+              if(this.state.editMode) {
+                return (
+                  <ListItem key={transaction} button>
+                    <ListItemText
+                      id={labelId}
+                      primary={transaction.tranTitle}
+                      secondary={payMessage}
+                    />
+                    
                     <ListItemText id={labelAmount} primary={amount} />
-                  </ListItemSecondaryAction>
-                </ListItem>
-              );
+                    <Clear />
+                    
+                  </ListItem>
+                );
+              }
+              else {
+                return (
+                  <ListItem key={transaction} button>
+                    <ListItemText
+                      id={labelId}
+                      primary={transaction.tranTitle}
+                      secondary={payMessage}
+                    />
+                    <ListItemSecondaryAction>
+                      <ListItemText id={labelAmount} primary={amount} />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                );
+              }
             })}
           </List>
         </Paper>
