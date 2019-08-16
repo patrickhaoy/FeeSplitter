@@ -75,7 +75,7 @@ app.post('/userInfo', function(req, res) {
 	})
 });
 
-router.get('/api/get/userprofilefromdb', (req, res, next) => {
+app.get('/userInfo/get', (req, res, next) => {
 	const email = String(req.query.email)
 	con.query("SELECT * FROM users WHERE email = ?", [ email ], (q_err, q_res) => {
 	  res.json(q_res.rows)
