@@ -119,11 +119,12 @@ class LogoutNavbar extends React.Component {
   }
 
   postSubID() {
+    console.log(this.state.profile);
     var bodyContent = {
       subID: this.state.profile.sub,
       email: this.state.profile.email,
       firstName: this.state.profile.given_name,
-      lastName: this.state.profile.lastName
+      lastName: this.state.profile.family_name
     }
 
     axios.post('http://localhost:4000/axios/userInfo',  bodyContent, {
