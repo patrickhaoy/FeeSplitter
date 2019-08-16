@@ -57,7 +57,7 @@ app.post('/userInfo', function(req, res) {
 		else {
 			if (result[0].count == 0) {
 				const sql = "INSERT INTO users (subID, email, firstName, lastName) VALUES (?, ?, ?, ?)";
-
+				console.log(sub + " " + email);
 				con.query(sql, [sub, email, firstName, lastName], function (err, result) {
 					if (err) res.send(err);
 					else {
