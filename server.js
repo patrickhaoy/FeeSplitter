@@ -60,6 +60,9 @@ app.post('/axios/userInfo', function(req, res) {
 			}
 		}
 	})
+	const firstName = req.body.firstName;
+	const lastName = req.body.lastName;
+    res.send(`${email} | ${sub} | ${firstName} | ${lastName}`)
 });
 
 // adds new group with title "groupTitle," also adds it with user "userID" under USERGROUPS
