@@ -5,14 +5,10 @@ const express = require('express');
 const mysql = require('mysql');
 var cors = require('cors');
 var app = express();
-<<<<<<< HEAD
-//var bodyParser = require('body-parser');
-=======
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
->>>>>>> a2d694cd852e3adafd44fdaf92893a3957dfe669
 
 const SELECT_ALL_USERS = 'SELECT * FROM users';
 const SELECT_ALL_TRANSACTIONS = 'SELECT * FROM transactions';
