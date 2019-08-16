@@ -68,6 +68,7 @@ class LogoutNavbar extends React.Component {
     this.getGroups = this.getGroups.bind(this);
     this.setUserID = this.setUserID.bind(this);
     this.postSubID = this.postSubID.bind(this);
+    this.updateUserID = this.updateUserID.bind(this);
   }
 
   componentDidMount() {
@@ -127,15 +128,28 @@ class LogoutNavbar extends React.Component {
       lastName: this.state.profile.family_name
     }
 
-    axios.post('http://localhost:4000/userInfo',  bodyContent, {
+    axios.post('https://fee-splitter.herokuapp.com/userInfo',  bodyContent, {
       headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       "Access-Control-Allow-Origin": "*",
       }
     })
-      .then(() => axios.get('http://localhost:4000/userInfo/get', {params: {email: this.state.profile.email}} ))
       .then(res => console.log(res))
+      .then(this.updateUserID)
       .catch(err => console.error(err));
+  }
+
+  updateUserID(){
+    axios.get('https://fee-splitter.herokuapp.com/userInfo/get?email=' + this.state.profile.email)
+    .then(response => {
+      this.setState({
+        user_id: response.data.data[0].userID
+      },
+      function() {
+        console.log(this.state.user_id);
+      }
+      )
+    });
   }
 
   getGroups() {
