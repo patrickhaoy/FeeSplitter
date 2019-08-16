@@ -80,7 +80,7 @@ class LogoutNavbar extends React.Component {
     axios
       .get("https://feesplitter.auth0.com/userinfo", config)
       .then(response => {
-        console.log("**********" + response.data["sub"]);
+        //console.log("**********" + response.data["sub"]);
         
         // Add to database 
         
@@ -102,7 +102,7 @@ class LogoutNavbar extends React.Component {
 			      name: response.data["given_name"]
           },
           () => {
-            console.log(this.state.profile);
+            //console.log(this.state.profile);
             this.setUserID();
             this.postSubID();
             //set the user id state here
@@ -124,14 +124,15 @@ class LogoutNavbar extends React.Component {
       email: this.state.profile.email
     }
 
-    axios.post('https://fee-splitter.herokuapp.com/axios/userInfo', { 
-      body : bodyContent,
+    console.log('trying to post.....')
+
+    axios.post('http://localhost:4000/axios/userInfo',  bodyContent, {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json;charset=UTF-8',
+      "Access-Control-Allow-Origin": "*",
       }
     })
-      .then(res => console.log('SubID sent'))
+      .then(res => console.log(res))
       .catch(err => console.error(err));
   }
 
