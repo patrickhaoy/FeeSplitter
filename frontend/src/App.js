@@ -221,7 +221,7 @@ class AddUsersPopup extends React.Component {
   render() {
     return (
       <div className="popup">
-        <div className="popup_inner">
+        <div className="popup_inner" style = {{textAlign: "center"}}>
           <div className="popup_header">
             <h1>User Not Registered</h1>
           </div>
@@ -229,9 +229,9 @@ class AddUsersPopup extends React.Component {
             This email has not been registered yet. Please have them register
             with FeeSplitter first.{" "}
           </h5>
-          <button type="button" onClick={this.props.closePopup}>
+          <Button type="button" onClick={this.props.closePopup}>
             Close
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -241,6 +241,13 @@ class AddUsersPopup extends React.Component {
 const { Option } = Select;
 
 class AddTransactionPopup extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      users: []
+    }
+  }
+
   render() {
     return (
       <div className="popup">
@@ -319,9 +326,12 @@ class AddTransactionPopup extends React.Component {
               </Option>
             </Select>
           </div>
-          <button style = {{margin: '1em'}}type="button" onClick={this.props.closePopup}>
+          <Button style = {{margin: '1em'}}type="button">
+            Add
+          </Button>
+          <Button style = {{margin: '1em'}}type="button" onClick={this.props.closePopup}>
             Close
-          </button>
+          </Button>
         </div>
       </div>
     );
