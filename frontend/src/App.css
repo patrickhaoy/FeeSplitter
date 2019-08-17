@@ -33,18 +33,27 @@
   bottom: 0;
   margin: auto;
   background-color: rgba(0,0,0, 0.5);
+  z-index: 1000;
 }
 
 .popup_inner {
   position: absolute;
+<<<<<<< HEAD
   left: 25%;
   right: 25%;
   top: 25%;
   bottom: 10%;
+=======
+  left: 30%;
+  right: 30%;
+  top: 20%;
+  bottom: 20%;
+>>>>>>> f87a4c0a6857de9f30fed86c5d89d1d160fbca33
   margin-bottom: 200px;
   border-bottom-left-radius: 20%;
   border-bottom-right-radius: 20%;
   background: white;
+  z-index: 1000;
 }
 
 .popup_header {
@@ -53,6 +62,7 @@
   background: #2ecc71;
   color: white;
   font-size: 10px;
+  z-index: 1000;
 }
 
 @keyframes App-logo-spin {
@@ -79,4 +89,8 @@ body {
 
 #addEmailButton:hover {
   cursor: pointer;
+}
+
+.div-center{
+  text-align:center;
 }

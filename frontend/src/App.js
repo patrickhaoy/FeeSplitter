@@ -20,7 +20,11 @@ import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Clear from "@material-ui/icons/Clear";
+<<<<<<< HEAD
 import { Select } from "antd";
+=======
+import Draggable from 'react-draggable';
+>>>>>>> f87a4c0a6857de9f30fed86c5d89d1d160fbca33
 
 class UsersView extends React.Component {
   constructor(props) {
@@ -81,11 +85,12 @@ class UsersView extends React.Component {
 
   getUserEmail() {
     console.log(this.state.emailInput);
-    // fetch(
-    //   'https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=' + this.state.groupID + '&email=' + this.state.emailInput
-    // )
-    //   .then(response => response.json())
-    //   .then(response => console.log('Success:', JSON.stringify(response)))
+    fetch(
+      'https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=' + this.state.groupID + '&email=' + this.state.emailInput
+    )
+      .then(response => response.json())
+      .then(response => console.log('Success:', JSON.stringify(response)))
+      .catch(this.togglePopup = this.togglePopup.bind(this));
   }
 
   toggleEditMode() {
@@ -161,19 +166,17 @@ class UsersView extends React.Component {
             {/*  */}
 
             <div>
-              {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
-              <ListItemText
-                id="addEmailButton"
-                onClick={this.togglePopup.bind(this)}
-              >
-                Add
-              </ListItemText>
-              {this.state.showPopup ? (
-                <AddUsersPopup
-                  text='Click "Close Button" to hide popup'
-                  closePopup={this.togglePopup.bind(this)}
-                />
-              ) : null}
+                {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
+                <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
+                  Add
+                </ListItemText>
+                {this.state.showPopup ?
+                  <AddUsersPopup
+                    text='Click "Close Button" to hide popup'
+                    closePopup={this.togglePopup.bind(this)}
+                  />
+                  : null
+                }
             </div>
           </ListItem>
           <List>
@@ -325,6 +328,17 @@ class AddTransactionPopup extends React.Component {
             Close
           </button>
         </div>
+      <div className='popup'>
+        <Draggable>
+          <div className='popup_inner'>
+            <div className='popup_header'>
+              <h1>User Not Registered</h1>
+            </div>
+            <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
+            <div className='div-center'><Button type = "button" onClick={this.props.closePopup}>Close</Button></div>
+            
+          </div>
+        </Draggable>
       </div>
     );
   }

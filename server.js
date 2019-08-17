@@ -199,9 +199,18 @@ app.get('/groups/users/email/add', (req, res) => {
 						con.query(sqlInsert, [groupID, userID], function (err, result) {
 							if (err) res.send(err);
 							else {
-								return res.json({
-									data: result
+								const sqlGet = "SELECT * FROM users"
+								con.query(sqlGet, function (err, result) {
+									if (err) res.send(err);
+									else {
+										return res.json({
+											data: result
+										})
+									}
 								})
+								// return res.json({
+								// 	data: result
+								// })
 							}
 						})
 					}
