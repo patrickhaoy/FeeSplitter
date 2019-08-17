@@ -113,7 +113,7 @@ app.get('/users/groups/add', (req, res) => {
 	});
 });
 
-// deletes relations with "groupID" from GROUPS, USERGROUPS, and TRANSACTIONS
+// deletes relations with "groupID" from GROUPS, USERGROUPS, TRANSACTIONS, OWES
 app.get('/users/groups/delete', (req, res) => {
 	const {groupID} = req.query;
 	const sqlGroup = "DELETE FROM groups WHERE groupID = ?";
@@ -130,6 +130,14 @@ app.get('/users/groups/delete', (req, res) => {
 							return res.json({
 								data: result
 							})
+							// con.query("DELETE FROM owes WHERE groupID = ?", [groupID], function (err, result) {
+							// 	if (err) res.send(err);
+							// 	else {
+							// 		return res.json({
+							// 			data: result
+							// 		})
+							// 	}
+							// })
 						}
 					})
 				}
@@ -220,19 +228,29 @@ app.get('/groups/users/email/add', (req, res) => {
 	})
 })
 
-// delete user with "userID" in group "groupID" in USERGROUPS, TRANSACTIONS
+// delete user with "userID" in group "groupID" in USERGROUPS, TRANSACTIONS, OWES
 app.get('/groups/users/delete', (req, res) => {
 	const {groupID, userID} = req.query;
 	const sql = "DELETE FROM userGroups WHERE groupID = ? AND userID = ?";
 	con.query(sql, [groupID, userID], function (err, result) {
 		if (err) res.send(err);
 		else {
+			const sql = "DELETE FROM transactions WHERE groupID = ? AND userID = ?";
 			con.query(sql, [groupID, userID, userID], function (err, result) {
 				if (err) res.send(err);
 				else {
 					return res.json({
 						data: result
 					})
+					// const sql = "DELETE FROM owes WHERE groupID = ? AND userID = ?";
+					// con.query(sql, [groupID, userID, userID], function (err, result) {
+					// 	if (err) res.send(err);
+					// 	else {
+					// 		return res.json({
+					// 			data: result
+					// 		})
+					// 	}
+					// })
 				}
 			})
 		}
@@ -249,6 +267,23 @@ app.get('/transactions/add', (req, res) => {
 			return res.json({
 				data: result
 			})
+			// const sqlSearch = "SELECT COUNT(*) as count FROM owes WHERE ((fromID = ? AND toID = ?) OR (fromID = ? AND toID = ?))";
+			// con.query(sqlSearch, [fromID, toID, toID, fromID], function (err, result) {
+			// 	if (err) res.send(err);
+			// 	else if (result[0].count == 0) {
+			// 		const sqlAdd = "INSERT INTO owes (groupID, fromID, toID, netAmount) VALUES (?, ?, ?, ?)";
+			// 		con.query(sqlAdd, [groupID, fromID, toID, amount], function (err, result) {
+			// 			if (err) res.send(err);
+			// 			else {
+			// 				return res.json({
+			// 					data: result
+			// 				})
+			// 			}
+			// 		})
+			// 	} else {
+			// 		const sqlEdit = "UPDATE"
+			// 	}
+			// })
 		}
 	})
 });
