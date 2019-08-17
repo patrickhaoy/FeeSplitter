@@ -1,6 +1,5 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import logo from "./logo.svg";
+import React from "react";
+import ReactDOM from 'react-dom'
 import "./App.css";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -20,11 +19,7 @@ import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Clear from "@material-ui/icons/Clear";
-<<<<<<< HEAD
 import { Select } from "antd";
-=======
-import Draggable from 'react-draggable';
->>>>>>> f87a4c0a6857de9f30fed86c5d89d1d160fbca33
 
 class UsersView extends React.Component {
   constructor(props) {
@@ -328,85 +323,10 @@ class AddTransactionPopup extends React.Component {
             Close
           </button>
         </div>
-      <div className='popup'>
-        <Draggable>
-          <div className='popup_inner'>
-            <div className='popup_header'>
-              <h1>User Not Registered</h1>
-            </div>
-            <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
-            <div className='div-center'><Button type = "button" onClick={this.props.closePopup}>Close</Button></div>
-            
-          </div>
-        </Draggable>
       </div>
     );
   }
 }
-
-// class OweView extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       owes = [],
-//       groupID = props.groupID,
-//       userID = props.userID
-//     };
-//   }
-//   this.getOwes = this.getOwes.bind(this);
-
-//   componentDidMount() {
-//     if (this.state.me_filter) {
-//       this.getMyOwes();
-//     } else {
-//       this.getOwes();
-//     }
-//   }
-
-//   componentWillRecieveProps(nextProps) {
-//     this.setState(
-//       {
-//         groupID: nextProps.groupID,
-//         userID: nextProps.userID
-//       },
-//       function() {
-//         if (this.state.me_filter) {
-//           this.getMyOwes();
-//         } else {
-//           this.getOwes();
-//         }
-//       }
-//     );
-//   }
-
-//   getOwes() {
-//     fetch(
-//       "https://fee-splitter.herokuapp.com/transactions/groups?groupID=" +
-//         this.state.groupID
-//     )
-//       .then(response => response.json())
-//       .then(response =>
-//         this.setState({
-//           owes: response.data
-//         })
-//       );
-//   }
-
-//   getMyTransactions() {
-//     fetch(
-//       "http://fee-splitter.herokuapp.com/transactions/groups/user?userID=" +
-//         this.state.userID +
-//         "&groupID=" +
-//         this.state.groupID
-//     )
-//       .then(response => response.json())
-//       .then(response =>
-//         this.setState({
-//           transactions: response.data
-//         })
-//       );
-//   }
-// }
 
 class TransactionsView extends React.Component {
   constructor(props) {
