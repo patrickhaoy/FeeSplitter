@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import logo from "./logo.svg";
 import "./App.css";
@@ -20,6 +20,7 @@ import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Clear from "@material-ui/icons/Clear";
+import { Select } from "antd";
 
 class UsersView extends React.Component {
   constructor(props) {
@@ -93,14 +94,13 @@ class UsersView extends React.Component {
         editMode: !this.state.editMode
       },
       function() {
-        if(this.state.editMode){
+        if (this.state.editMode) {
           this.setState({
-            editText: 'Done'
+            editText: "Done"
           });
-        }
-        else{
+        } else {
           this.setState({
-            editText: 'Edit'
+            editText: "Edit"
           });
         }
       }
@@ -110,7 +110,7 @@ class UsersView extends React.Component {
   togglePopup() {
     this.setState({
       showPopup: !this.state.showPopup
-    })
+    });
   }
 
   updateEmailInput(e) {
@@ -119,8 +119,8 @@ class UsersView extends React.Component {
     });
   }
 
-  deleteRowUser(userID){
-    console.log('deleting' + userID);
+  deleteRowUser(userID) {
+    console.log("deleting" + userID);
   }
 
   //[checked, setChecked] = React.useState([1]);
@@ -161,17 +161,19 @@ class UsersView extends React.Component {
             {/*  */}
 
             <div>
-                {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
-                <ListItemText id="addEmailButton" onClick={this.togglePopup.bind(this)}>
-                  Add
-                </ListItemText>
-                {this.state.showPopup ?
-                  <AddUsersPopup
-                    text='Click "Close Button" to hide popup'
-                    closePopup={this.togglePopup.bind(this)}
-                  />
-                  : null
-                }
+              {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
+              <ListItemText
+                id="addEmailButton"
+                onClick={this.togglePopup.bind(this)}
+              >
+                Add
+              </ListItemText>
+              {this.state.showPopup ? (
+                <AddUsersPopup
+                  text='Click "Close Button" to hide popup'
+                  closePopup={this.togglePopup.bind(this)}
+                />
+              ) : null}
             </div>
           </ListItem>
           <List>
@@ -220,13 +222,108 @@ class UsersView extends React.Component {
 class AddUsersPopup extends React.Component {
   render() {
     return (
-      <div className='popup'>
-        <div className='popup_inner'>
-          <div className='popup_header'>
+      <div className="popup">
+        <div className="popup_inner">
+          <div className="popup_header">
             <h1>User Not Registered</h1>
           </div>
-          <h5 align = "center">This email has not been registered yet. Please have them register with FeeSplitter first. </h5>
-        <button type = "button" onClick={this.props.closePopup}>Close</button>
+          <h5 align="center">
+            This email has not been registered yet. Please have them register
+            with FeeSplitter first.{" "}
+          </h5>
+          <button type="button" onClick={this.props.closePopup}>
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
+const { Option } = Select;
+
+class AddTransactionPopup extends React.Component {
+  render() {
+    return (
+      <div className="popup">
+        <div className="popup_inner">
+          <div className="popup_header">
+            <h1>Add a Transaction</h1>
+          </div>
+          <h5 align="center">Add a transaction here!</h5>
+          <div>
+            <span style = {{color: "black", margin: '1em'}}>From</span>
+            <Select
+              mode="multiple"
+              style={{ width: "30%" }}
+              placeholder="select one country"
+              defaultValue={["china"]}
+              //onChange={handleChange}
+              optionLabelProp="label"
+            >
+              <Option value="china" label="China">
+                <span role="img" aria-label="China">
+                  🇨🇳{" "}
+                </span>
+                China (中国)
+              </Option>
+              <Option value="usa" label="USA">
+                <span role="img" aria-label="USA">
+                  🇺🇸{" "}
+                </span>
+                USA (美国)
+              </Option>
+              <Option value="japan" label="Japan">
+                <span role="img" aria-label="USA">
+                  🇯🇵{" "}
+                </span>
+                Japan (日本)
+              </Option>
+              <Option value="koean" label="Koean">
+                <span role="img" aria-label="USA">
+                  🇰🇷{" "}
+                </span>
+                Koean (韩国)
+              </Option>
+            </Select>
+            <span style = {{color: "black", margin: '1em'}}>to</span>
+            <Select
+              mode="multiple"
+              style={{ width: "30%" }}
+              placeholder="select one country"
+              defaultValue={["china"]}
+              //onChange={handleChange}
+              optionLabelProp="label"
+            >
+              <Option value="china" label="China">
+                <span role="img" aria-label="China">
+                  🇨🇳{" "}
+                </span>
+                China (中国)
+              </Option>
+              <Option value="usa" label="USA">
+                <span role="img" aria-label="USA">
+                  🇺🇸{" "}
+                </span>
+                USA (美国)
+              </Option>
+              <Option value="japan" label="Japan">
+                <span role="img" aria-label="USA">
+                  🇯🇵{" "}
+                </span>
+                Japan (日本)
+              </Option>
+              <Option value="koean" label="Koean">
+                <span role="img" aria-label="USA">
+                  🇰🇷{" "}
+                </span>
+                Koean (韩国)
+              </Option>
+            </Select>
+          </div>
+          <button style = {{margin: '1em'}}type="button" onClick={this.props.closePopup}>
+            Close
+          </button>
         </div>
       </div>
     );
@@ -307,12 +404,14 @@ class TransactionsView extends React.Component {
       me_filter: false,
       editMode: false,
       editText: "Edit",
-      showPopup: false
+      showAddPopup: false
     };
     this.getTransactions = this.getTransactions.bind(this);
     this.renderTransactions = this.renderTransactions.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.toggleEditMode = this.toggleEditMode.bind(this);
+    this.showTransactionPopup = this.showTransactionPopup.bind(this);
+    this.closeTransactionPopup = this.closeTransactionPopup.bind(this);
   }
 
   componentDidMount() {
@@ -379,18 +478,29 @@ class TransactionsView extends React.Component {
         editMode: !this.state.editMode
       },
       function() {
-        if(this.state.editMode){
+        if (this.state.editMode) {
           this.setState({
-            editText: 'Done'
+            editText: "Done"
           });
-        }
-        else{
+        } else {
           this.setState({
-            editText: 'Edit'
+            editText: "Edit"
           });
         }
       }
     );
+  }
+
+  showTransactionPopup() {
+    this.setState({
+      showAddPopup: true
+    });
+  }
+
+  closeTransactionPopup() {
+    this.setState({
+      showAddPopup: false
+    });
   }
 
   handleSwitchChange = event => {
@@ -433,7 +543,18 @@ class TransactionsView extends React.Component {
               control={<Switch value="checkedA" />}
               label="Me"
             />
-            <Button onClick = {this.toggleEditMode} color="inherit">{this.state.editText}</Button>
+            <Button onClick={this.toggleEditMode} color="inherit">
+              {this.state.editText}
+            </Button>
+            <Button onClick={this.showTransactionPopup} color="inherit">
+              Add
+            </Button>
+            {this.state.showAddPopup ? (
+              <AddTransactionPopup
+                text='Click "Close Button" to hide popup'
+                closePopup={this.closeTransactionPopup}
+              />
+            ) : null}
           </Toolbar>
         </AppBar>
         <Paper>
@@ -451,7 +572,7 @@ class TransactionsView extends React.Component {
               } paid ${transaction.toID_firstName} ${
                 transaction.toID_lastName
               }`;
-              if(this.state.editMode) {
+              if (this.state.editMode) {
                 return (
                   <ListItem key={transaction} button>
                     <ListItemText
@@ -459,14 +580,12 @@ class TransactionsView extends React.Component {
                       primary={transaction.tranTitle}
                       secondary={payMessage}
                     />
-                    
+
                     <ListItemText id={labelAmount} primary={amount} />
                     <Clear />
-                    
                   </ListItem>
                 );
-              }
-              else {
+              } else {
                 return (
                   <ListItem key={transaction} button>
                     <ListItemText
