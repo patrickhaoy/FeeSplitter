@@ -81,11 +81,12 @@ class UsersView extends React.Component {
 
   getUserEmail() {
     console.log(this.state.emailInput);
-    // fetch(
-    //   'https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=' + this.state.groupID + '&email=' + this.state.emailInput
-    // )
-    //   .then(response => response.json())
-    //   .then(response => console.log('Success:', JSON.stringify(response)))
+    fetch(
+      'https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=' + this.state.groupID + '&email=' + this.state.emailInput
+    )
+      .then(response => response.json())
+      .then(response => console.log('Success:', JSON.stringify(response)))
+      .catch(this.togglePopup = this.togglePopup.bind(this));
   }
 
   toggleEditMode() {
@@ -163,7 +164,7 @@ class UsersView extends React.Component {
 
             <div>
                 {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
-                <ListItemText id="addEmailButton" onClick={this.togglePopup.bind(this)}>
+                <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
                   Add
                 </ListItemText>
                 {this.state.showPopup ?
