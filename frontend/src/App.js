@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from 'react-dom'
+import ReactDOM from "react-dom";
 import "./App.css";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -81,11 +81,14 @@ class UsersView extends React.Component {
   getUserEmail() {
     console.log(this.state.emailInput);
     fetch(
-      'https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=' + this.state.groupID + '&email=' + this.state.emailInput
+      "https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=" +
+        this.state.groupID +
+        "&email=" +
+        this.state.emailInput
     )
       .then(response => response.json())
-      .then(response => console.log('Success:', JSON.stringify(response)))
-      .catch(this.togglePopup = this.togglePopup.bind(this));
+      .then(response => console.log("Success:", JSON.stringify(response)))
+      .catch((this.togglePopup = this.togglePopup.bind(this)));
   }
 
   toggleEditMode() {
@@ -161,17 +164,16 @@ class UsersView extends React.Component {
             {/*  */}
 
             <div>
-                {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
-                <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
-                  Add
-                </ListItemText>
-                {this.state.showPopup ?
-                  <AddUsersPopup
-                    text='Click "Close Button" to hide popup'
-                    closePopup={this.togglePopup.bind(this)}
-                  />
-                  : null
-                }
+              {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
+              <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
+                Add
+              </ListItemText>
+              {this.state.showPopup ? (
+                <AddUsersPopup
+                  text='Click "Close Button" to hide popup'
+                  closePopup={this.togglePopup.bind(this)}
+                />
+              ) : null}
             </div>
           </ListItem>
           <List>
@@ -221,7 +223,7 @@ class AddUsersPopup extends React.Component {
   render() {
     return (
       <div className="popup">
-        <div className="popup_inner" style = {{textAlign: "center"}}>
+        <div className="popup_inner" style={{ textAlign: "center" }}>
           <div className="popup_header">
             <h1>User Not Registered</h1>
           </div>
@@ -241,11 +243,41 @@ class AddUsersPopup extends React.Component {
 const { Option } = Select;
 
 class AddTransactionPopup extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      users: []
-    }
+      users: [],
+      groupID: props.groupID
+    };
+    console.log(this.state.groupID);
+    this.getUsers = this.getUsers.bind(this);
+  }
+
+  componentDidMount() {
+    this.getUsers();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      groupID: nextProps.groupID
+    });
+
+    this.getUsers();
+  }
+
+  getUsers() {
+    console.log('getting users')
+    console.log(this.state.groupID);
+    fetch(
+      "https://fee-splitter.herokuapp.com/users/groups?groupID=" +
+        this.state.groupID
+    )
+      .then(response => response.json())
+      .then(response =>
+        this.setState({
+          users: response.data
+        })
+      );
   }
 
   render() {
@@ -257,79 +289,57 @@ class AddTransactionPopup extends React.Component {
           </div>
           <h5 align="center">Add a transaction here!</h5>
           <div>
-            <span style = {{color: "black", margin: '1em'}}>From</span>
+            <span style={{ color: "black", margin: "1em" }}>From</span>
             <Select
               mode="multiple"
               style={{ width: "30%" }}
-              placeholder="select one country"
-              defaultValue={["china"]}
+              placeholder="select payers"
               //onChange={handleChange}
               optionLabelProp="label"
             >
-              <Option value="china" label="China">
-                <span role="img" aria-label="China">
-                  🇨🇳{" "}
-                </span>
-                China (中国)
-              </Option>
-              <Option value="usa" label="USA">
-                <span role="img" aria-label="USA">
-                  🇺🇸{" "}
-                </span>
-                USA (美国)
-              </Option>
-              <Option value="japan" label="Japan">
-                <span role="img" aria-label="USA">
-                  🇯🇵{" "}
-                </span>
-                Japan (日本)
-              </Option>
-              <Option value="koean" label="Koean">
-                <span role="img" aria-label="USA">
-                  🇰🇷{" "}
-                </span>
-                Koean (韩国)
-              </Option>
+              {this.state.users.map(user => {
+                const labelId = `${user.userID}`;
+                const fullName = `${user.firstName} ${user.lastName}`;
+                return (
+                  <Option value={labelId} label={fullName}>
+                    <span role="img" aria-label={fullName}>
+                      🇨🇳{" "}
+                    </span>
+                    {fullName}
+                  </Option>
+                );
+              })}
             </Select>
-            <span style = {{color: "black", margin: '1em'}}>to</span>
+            <span style={{ color: "black", margin: "1em" }}>to</span>
             <Select
               mode="multiple"
               style={{ width: "30%" }}
-              placeholder="select one country"
-              defaultValue={["china"]}
+              placeholder="select recipients"
               //onChange={handleChange}
               optionLabelProp="label"
             >
-              <Option value="china" label="China">
-                <span role="img" aria-label="China">
-                  🇨🇳{" "}
-                </span>
-                China (中国)
-              </Option>
-              <Option value="usa" label="USA">
-                <span role="img" aria-label="USA">
-                  🇺🇸{" "}
-                </span>
-                USA (美国)
-              </Option>
-              <Option value="japan" label="Japan">
-                <span role="img" aria-label="USA">
-                  🇯🇵{" "}
-                </span>
-                Japan (日本)
-              </Option>
-              <Option value="koean" label="Koean">
-                <span role="img" aria-label="USA">
-                  🇰🇷{" "}
-                </span>
-                Koean (韩国)
-              </Option>
+              {this.state.users.map(user => {
+                const labelId = `${user.userID}`;
+                const fullName = `${user.firstName} ${user.lastName}`;
+                return (
+                  <Option value={labelId} label={fullName}>
+                    <span role="img" aria-label={fullName}>
+                      🇨🇳{" "}
+                    </span>
+                    {fullName}
+                  </Option>
+                );
+              })}
             </Select>
           </div>
-          <Button style = {{margin: '1em'}}type="button">
+          <Button style={{ margin: "1em" }} type="button">
             Add
           </Button>
-          <Button style = {{margin: '1em'}}type="button" onClick={this.props.closePopup}>
+          <Button
+            style={{ margin: "1em" }}
+            type="button"
+            onClick={this.props.closePopup}
+          >
             Close
           </Button>
         </div>
@@ -495,6 +505,7 @@ class TransactionsView extends React.Component {
             </Button>
             {this.state.showAddPopup ? (
               <AddTransactionPopup
+                groupID={this.state.groupID}
                 text='Click "Close Button" to hide popup'
                 closePopup={this.closeTransactionPopup}
               />
@@ -555,6 +566,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      groupSelected: false,
       groupTitle: props.groupTitle,
       groupID: props.groupID,
       userID: props.userID
