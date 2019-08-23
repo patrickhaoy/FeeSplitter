@@ -28,6 +28,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      groupSelected: false,
       selectedGroupTitle: "",
       selectedGroupID: "",
       userID: ""
@@ -48,7 +49,8 @@ class Home extends Component {
   toggleGroup(id, group) {
     this.setState({
       selectedGroupTitle: group,
-      selectedGroupID: id
+      selectedGroupID: id,
+      groupSelected: true
     });
   }
 
@@ -68,7 +70,7 @@ class Home extends Component {
           isAuthenticated() &&
           <div>
             <LogoutNavbar setUser = {this.setUser} toggleGroup = {this.toggleGroup} logout = {this.logout}></LogoutNavbar>
-            <App userID = {this.state.userID} groupTitle = {this.state.selectedGroupTitle} groupID = {this.state.selectedGroupID}/>
+            <App groupSelected = {this.state.groupSelected} userID = {this.state.userID} groupTitle = {this.state.selectedGroupTitle} groupID = {this.state.selectedGroupID}/>
           </div>
         }
         {

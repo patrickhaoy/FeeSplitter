@@ -107,7 +107,6 @@ class LogoutNavbar extends React.Component {
   }
 
   postSubID() {
-    console.log(this.state.profile);
     var bodyContent = {
       subID: this.state.profile.sub,
       email: this.state.profile.email,
@@ -121,7 +120,7 @@ class LogoutNavbar extends React.Component {
       "Access-Control-Allow-Origin": "*",
       }
     })
-      .then(res => console.log(res))
+      //.then(res => console.log(res))
       .then(this.updateUserID)
       .catch(err => console.error(err));
   }
@@ -131,11 +130,7 @@ class LogoutNavbar extends React.Component {
     .then(response => {
       this.setState({
         user_id: response.data.data[0].userID
-      },
-      function() {
-        console.log(this.state.user_id);
-      }
-      )
+      })
     });
   }
 

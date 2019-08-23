@@ -19,6 +19,11 @@ import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Clear from "@material-ui/icons/Clear";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import { Select } from "antd";
 
 class UsersView extends React.Component {
@@ -266,8 +271,6 @@ class AddTransactionPopup extends React.Component {
   }
 
   getUsers() {
-    console.log('getting users')
-    console.log(this.state.groupID);
     fetch(
       "https://fee-splitter.herokuapp.com/users/groups?groupID=" +
         this.state.groupID
@@ -562,11 +565,113 @@ class TransactionsView extends React.Component {
   }
 }
 
+class OweView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+      groupID: props.groupID
+    };
+
+    this.getUsers = this.getUsers.bind(this);
+    this.getUserID = this.getUserID.bind(this);
+    this.populateTransactionTable = this.populateTransactionTable.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      groupID: nextProps.groupID
+    });
+  }
+
+  getUsers() {
+    fetch(
+      "https://fee-splitter.herokuapp.com/users/groups?groupID=" +
+        this.state.groupID
+    )
+      .then(response => response.json())
+      .then(response =>
+        this.setState({
+          users: response.data
+        })
+      );
+  }
+
+  getUserID(user) {
+    return user.userID;
+  }
+
+  populateTransactionTable() {
+    var rows = []
+    var user_id_list = this.state.users.map(this.getUserID);
+    console.log("populating transaction table")
+    for(var i = 0; i < user_id_list.length; i++) {
+      console.log(i)
+      var transactionsList = {};
+      for(var j = 0; j < user_id_list.length; j++) {
+        fetch(
+          "https://fee-splitter.herokuapp.com/transactions/groups/users?groupID=" + this.state.groupID +
+          "&fromID=" + user_id_list[i] + 
+          "&toID=" + user_id_list[j]
+        )
+          .then(response => response.json())
+          .then(response =>
+            console.log(response.data)
+          );
+      }
+      //rows[i] = {}
+    }
+  }
+
+  componentDidMount() {
+    this.getUsers();
+    this.populateTransactionTable();
+  }
+
+  render() {
+    function createData(name, calories, fat, carbs, protein) {
+      return { name, calories, fat, carbs, protein };
+    }
+
+    return (
+      <Paper >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>User</TableCell>
+              {this.state.users.map(user => {
+                const fullName = `${user.firstName} ${user.lastName}`;
+                return (
+                  <TableCell>{fullName}</TableCell>
+                );
+                })
+              }
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/* {rows.map(row => (
+              <TableRow key={row.name}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="right">{row.calories}</TableCell>
+                <TableCell align="right">{row.fat}</TableCell>
+                <TableCell align="right">{row.carbs}</TableCell>
+                <TableCell align="right">{row.protein}</TableCell>
+              </TableRow>
+            ))} */}
+          </TableBody>
+        </Table>
+      </Paper>
+    );
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupSelected: false,
+      groupSelected: props.groupSelected,
       groupTitle: props.groupTitle,
       groupID: props.groupID,
       userID: props.userID
@@ -577,20 +682,34 @@ class App extends React.Component {
     this.setState({
       groupTitle: nextProps.groupTitle,
       groupID: nextProps.groupID,
-      userID: nextProps.userID
+      userID: nextProps.userID,
+      groupSelected: nextProps.groupSelected
     });
   }
 
   render() {
-    return (
-      <div className="App">
-        <UsersView groupID={this.state.groupID} userID={this.state.userID} />
-        <TransactionsView
-          groupID={this.state.groupID}
-          userID={this.state.userID}
-        />
-      </div>
-    );
+    if (this.state.groupSelected) {
+      return (
+        <div className="App">
+          <UsersView groupID={this.state.groupID} userID={this.state.userID} />
+          <TransactionsView
+            groupID={this.state.groupID}
+            userID={this.state.userID}
+          />
+          <OweView groupID = {this.state.groupID}/>
+        </div>
+      );
+    } else {
+      return (
+        <div className="App">
+          <Paper>
+            <Typography variant="h5" component="h3">
+              Get started by selecting a group from the navigation bar above!
+            </Typography>
+          </Paper>
+        </div>
+      );
+    }
   }
 }
 
