@@ -593,6 +593,9 @@ class OweView extends React.Component {
       .then(response =>
         this.setState({
           users: response.data
+        },
+        function() {
+          this.populateTransactionTable();
         })
       );
   }
@@ -604,10 +607,9 @@ class OweView extends React.Component {
   populateTransactionTable() {
     var rows = []
     var user_id_list = this.state.users.map(this.getUserID);
-    console.log("populating transaction table")
     for(var i = 0; i < user_id_list.length; i++) {
-      console.log(i)
-      var transactionsList = {};
+      var transactionsList = [];
+      var total = 0;
       for(var j = 0; j < user_id_list.length; j++) {
         fetch(
           "https://fee-splitter.herokuapp.com/transactions/groups/users?groupID=" + this.state.groupID +
@@ -615,17 +617,20 @@ class OweView extends React.Component {
           "&toID=" + user_id_list[j]
         )
           .then(response => response.json())
-          .then(response =>
-            console.log(response.data)
-          );
+          .then(response => {
+            for(var k = 0; k < response.data.length; i++) {
+              total += response.data[k].amount;
+            }
+            transactionsList[j] = total;
+          });
       }
-      //rows[i] = {}
+      rows[i] = transactionsList
     }
+    console.log(rows)
   }
 
   componentDidMount() {
     this.getUsers();
-    this.populateTransactionTable();
   }
 
   render() {
