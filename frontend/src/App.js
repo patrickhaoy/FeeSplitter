@@ -19,12 +19,14 @@ import Switch from "@material-ui/core/Switch";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Clear from "@material-ui/icons/Clear";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import axios from "axios";
 import { Select } from "antd";
+import { transcode } from "buffer";
 
 class UsersView extends React.Component {
   constructor(props) {
@@ -518,18 +520,10 @@ class TransactionsView extends React.Component {
         <Paper>
           <List>
             {this.state.transactions.map(transaction => {
-              const labelId = `checkbox-list-secondary-label-${
-                transaction.tranTitle
-              }`;
-              const labelAmount = `checkbox-list-secondary-label-${
-                transaction.amount
-              }`;
+              const labelId = `checkbox-list-secondary-label-${transaction.tranTitle}`;
+              const labelAmount = `checkbox-list-secondary-label-${transaction.amount}`;
               const amount = `$${transaction.amount}`;
-              const payMessage = `${transaction.fromID_firstName} ${
-                transaction.fromID_lastName
-              } paid ${transaction.toID_firstName} ${
-                transaction.toID_lastName
-              }`;
+              const payMessage = `${transaction.fromID_firstName} ${transaction.fromID_lastName} paid ${transaction.toID_firstName} ${transaction.toID_lastName}`;
               if (this.state.editMode) {
                 return (
                   <ListItem key={transaction} button>
@@ -570,12 +564,14 @@ class OweView extends React.Component {
     super(props);
     this.state = {
       users: [],
-      groupID: props.groupID
+      groupID: props.groupID,
+      transactionTotals: []
     };
 
     this.getUsers = this.getUsers.bind(this);
     this.getUserID = this.getUserID.bind(this);
     this.populateTransactionTable = this.populateTransactionTable.bind(this);
+    this.partitionArray = this.partitionArray.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -591,12 +587,14 @@ class OweView extends React.Component {
     )
       .then(response => response.json())
       .then(response =>
-        this.setState({
-          users: response.data
-        },
-        function() {
-          this.populateTransactionTable();
-        })
+        this.setState(
+          {
+            users: response.data
+          },
+          function() {
+            this.populateTransactionTable();
+          }
+        )
       );
   }
 
@@ -604,29 +602,63 @@ class OweView extends React.Component {
     return user.userID;
   }
 
-  populateTransactionTable() {
-    var rows = []
-    var user_id_list = this.state.users.map(this.getUserID);
-    for(var i = 0; i < user_id_list.length; i++) {
-      var transactionsList = [];
-      var total = 0;
-      for(var j = 0; j < user_id_list.length; j++) {
-        fetch(
-          "https://fee-splitter.herokuapp.com/transactions/groups/users?groupID=" + this.state.groupID +
-          "&fromID=" + user_id_list[i] + 
-          "&toID=" + user_id_list[j]
-        )
-          .then(response => response.json())
-          .then(response => {
-            for(var k = 0; k < response.data.length; i++) {
-              total += response.data[k].amount;
-            }
-            transactionsList[j] = total;
-          });
-      }
-      rows[i] = transactionsList
+  getUserName(user) {
+    return user.firstName + " " + user.lastName
+  }
+
+  partitionArray(arr, pieces, usernames) {
+    var parent = [];
+    for (var i = 0; i < pieces; i++) {
+      var current = arr.slice(i * pieces, (i + 1) * pieces);
+      current.unshift(usernames[i]);
+      parent.push(current);
     }
-    console.log(rows)
+    return parent;
+  }
+
+  populateTransactionTable() {
+    var self = this;
+    var transactionsList = [];
+    var promises = [];
+
+    var usernames = this.state.users.map(this.getUserName);
+    var user_id_list = this.state.users.map(this.getUserID);
+    for (var i = 0; i < user_id_list.length; i++) {
+      for (var j = 0; j < user_id_list.length; j++) {
+        var url =
+          "https://fee-splitter.herokuapp.com/transactions/groups/users?groupID=" +
+          this.state.groupID +
+          "&fromID=" +
+          user_id_list[i] +
+          "&toID=" +
+          user_id_list[j];
+        promises.push(axios.get(url));
+      }
+    }
+
+    axios
+      .all(promises)
+      .then(function(results) {
+        results.forEach(function(response) {
+          transactionsList.push(response.data.data);
+        });
+      })
+      .then(function() {
+        var amountList = [];
+        for (var i = 0; i < transactionsList.length; i++) {
+          var currentTransactions = transactionsList[i];
+          var total = 0;
+          for (var j = 0; j < currentTransactions.length; j++) {
+            total += parseFloat(currentTransactions[j].amount);
+          }
+          amountList[i] = total;
+        }
+
+        var partioned = self.partitionArray(amountList, user_id_list.length, usernames);
+        self.setState({
+          transactionTotals: partioned
+        })
+      });
   }
 
   componentDidMount() {
@@ -634,37 +666,26 @@ class OweView extends React.Component {
   }
 
   render() {
-    function createData(name, calories, fat, carbs, protein) {
-      return { name, calories, fat, carbs, protein };
-    }
-
     return (
-      <Paper >
+      <Paper>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>User</TableCell>
               {this.state.users.map(user => {
                 const fullName = `${user.firstName} ${user.lastName}`;
-                return (
-                  <TableCell>{fullName}</TableCell>
-                );
-                })
-              }
+                return <TableCell>Paid {fullName}</TableCell>;
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {rows.map(row => (
-              <TableRow key={row.name}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+            {this.state.transactionTotals.map(row => (
+              <TableRow>
+                {row.map(item => (
+                  <TableCell align="left">{item}</TableCell>
+                ))}
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </Paper>
@@ -701,7 +722,7 @@ class App extends React.Component {
             groupID={this.state.groupID}
             userID={this.state.userID}
           />
-          <OweView groupID = {this.state.groupID}/>
+          <OweView groupID={this.state.groupID} />
         </div>
       );
     } else {
