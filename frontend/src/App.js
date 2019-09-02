@@ -86,6 +86,7 @@ class UsersView extends React.Component {
   }
 
   getUserEmail() {
+    //var popup = new Boolean(false);
     console.log(this.state.emailInput);
     fetch(
       "https://fee-splitter.herokuapp.com/groups/users/email/add?groupID=" +
@@ -95,7 +96,13 @@ class UsersView extends React.Component {
     )
       .then(response => response.json())
       .then(response => console.log("Success:", JSON.stringify(response)))
-      .catch((this.togglePopup = this.togglePopup.bind(this)));
+      .catch(
+        (this.togglePopup = this.togglePopup.bind(this))
+        );
+
+        
+      //console.log(popup)
+      //this.getUsers();
       /*
       .then(response => console.log("Success:", JSON.stringify(response)))
       .catch((this.togglePopup = this.togglePopup.bind(this)));
@@ -135,7 +142,14 @@ class UsersView extends React.Component {
   }
 
   deleteRowUser(userID) {
-    console.log("deleting" + userID);
+    fetch(
+      "https://fee-splitter.herokuapp.com/groups/users/delete?groupID=" + 
+        this.state.groupID +
+        "&userID=" +
+        userID
+    )
+      .then(response => response.json())
+      .then(response => console.log("Success:", JSON.stringify(response)))
   }
 
   //[checked, setChecked] = React.useState([1]);
@@ -180,12 +194,14 @@ class UsersView extends React.Component {
               <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
                 Add
               </ListItemText>
-              {this.state.showPopup ? (
+              {
+                this.state.showPopup ? (
                 <AddUsersPopup
                   text='Click "Close Button" to hide popup'
                   closePopup={this.togglePopup.bind(this)}
                 />
-              ) : null}
+              ) : null
+              }
             </div>
           </ListItem>
           <List>
@@ -252,22 +268,22 @@ class AddUsersPopup extends React.Component {
   }
 }
 
-class AddUsersPopupSuccess extends React.Component {
-  render() {
-    return (
-      <div className="popup">
-        <div className="popup_inner" style={{ textAlign: "center" }}>
-          <div className="popup_header">
-            <h1>Success!</h1>
-          </div>
-          <h5 align="center">
-            Refresh page to see changes.{" "}
-          </h5>
-        </div>
-      </div>
-    );
-  }
-}
+// class AddUsersPopupSuccess extends React.Component {
+//   render() {
+//     return (
+//       <div className="popup">
+//         <div className="popup_inner" style={{ textAlign: "center" }}>
+//           <div className="popup_header">
+//             <h1>Success!</h1>
+//           </div>
+//           <h5 align="center">
+//             Refresh page to see changes.{" "}
+//           </h5>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 const { Option } = Select;
 

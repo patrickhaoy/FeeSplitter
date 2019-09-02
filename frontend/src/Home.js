@@ -108,7 +108,7 @@ class Home extends Component {
                                 className="btn-icon mb-3 mb-sm-0"
                                 color="info"
                               >
-                                <span className="btn-inner--text">Get Started</span>
+                                <span className="btn-inner--text" onClick={this.login}>Get Started</span>
                               </Button>
                               {/*
                               <Button

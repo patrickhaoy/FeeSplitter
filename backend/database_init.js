@@ -35,11 +35,11 @@ con.connect(function(err) {
  		console.log("userGroups table deleted");
 	});
 
-	// Delete Owes Table
-	con.query("DROP TABLE owes", function (err, results) {
-		if (err) throw err;
-		console.log("owes table deleted")
-	})
+	// // Delete Owes Table
+	// con.query("DROP TABLE owes", function (err, results) {
+	// 	if (err) throw err;
+	// 	console.log("owes table deleted")
+	// })
   
   	var sql = "CREATE TABLE users (userID INT(255) AUTO_INCREMENT PRIMARY KEY, subID VARCHAR(255), email VARCHAR(255), firstName VARCHAR(255), lastName VARCHAR(255))";
   	con.query(sql, function (err, result) {
