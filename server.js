@@ -207,7 +207,7 @@ app.get('/groups/users/email/add', (req, res) => {
 						con.query(sqlInsert, [groupID, userID], function (err, result) {
 							if (err) res.send(err);
 							else {
-								const sqlGet = "SELECT * FROM usersGroups WHERE groupID = ?"
+								const sqlGet = "SELECT * FROM userGroups WHERE groupID = ?"
 								con.query(sqlGet, [groupID], function (err, result) {
 									if (err) res.send(err);
 									else {
@@ -239,7 +239,7 @@ app.get('/groups/users/delete', (req, res) => {
 			con.query(sql, [groupID, userID, userID], function (err, result) {
 				if (err) res.send(err);
 				else {
-					const sqlGet = "SELECT * FROM usersGroups WHERE groupID = ?"
+					const sqlGet = "SELECT * FROM userGroups WHERE groupID = ?"
 					con.query(sqlGet, [groupID], function (err, result) {
 						if (err) res.send(err);
 						else {
