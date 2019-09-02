@@ -207,8 +207,8 @@ app.get('/groups/users/email/add', (req, res) => {
 						con.query(sqlInsert, [groupID, userID], function (err, result) {
 							if (err) res.send(err);
 							else {
-								const sqlGet = "SELECT * FROM users"
-								con.query(sqlGet, function (err, result) {
+								const sqlGet = "SELECT * FROM usersGroups WHERE groupID = ?"
+								con.query(sqlGet, [groupID], function (err, result) {
 									if (err) res.send(err);
 									else {
 										return res.json({
@@ -239,8 +239,14 @@ app.get('/groups/users/delete', (req, res) => {
 			con.query(sql, [groupID, userID, userID], function (err, result) {
 				if (err) res.send(err);
 				else {
-					return res.json({
-						data: result
+					const sqlGet = "SELECT * FROM usersGroups WHERE groupID = ?"
+					con.query(sqlGet, [groupID], function (err, result) {
+						if (err) res.send(err);
+						else {
+							return res.json({
+								data: result
+							})
+						}
 					})
 					// const sql = "DELETE FROM owes WHERE groupID = ? AND userID = ?";
 					// con.query(sql, [groupID, userID, userID], function (err, result) {
