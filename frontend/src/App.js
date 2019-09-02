@@ -94,6 +94,10 @@ class UsersView extends React.Component {
       .then(response => response.json())
       .then(response => console.log("Success:", JSON.stringify(response)))
       .catch((this.togglePopup = this.togglePopup.bind(this)));
+      /*
+      .then(response => console.log("Success:", JSON.stringify(response)))
+      .catch((this.togglePopup = this.togglePopup.bind(this)));
+      */
   }
 
   toggleEditMode() {
@@ -118,6 +122,7 @@ class UsersView extends React.Component {
   togglePopup() {
     this.setState({
       showPopup: !this.state.showPopup
+      //showPopup: 
     });
   }
 
@@ -239,6 +244,23 @@ class AddUsersPopup extends React.Component {
           <Button type="button" onClick={this.props.closePopup}>
             Close
           </Button>
+        </div>
+      </div>
+    );
+  }
+}
+
+class AddUsersPopupSuccess extends React.Component {
+  render() {
+    return (
+      <div className="popup">
+        <div className="popup_inner" style={{ textAlign: "center" }}>
+          <div className="popup_header">
+            <h1>Success!</h1>
+          </div>
+          <h5 align="center">
+            Refresh page to see changes.{" "}
+          </h5>
         </div>
       </div>
     );
