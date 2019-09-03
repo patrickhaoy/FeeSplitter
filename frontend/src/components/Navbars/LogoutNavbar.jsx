@@ -1,6 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+
+
 // JavaScript plugin that hides or shows a component based on your scroll
 // reactstrap components
 import {
@@ -46,12 +53,15 @@ class LogoutNavbar extends React.Component {
       name: "",
       profile: "false",
       user_id: 1,
-      groupSelectText: "Select Group ▾"
+      groupSelectText: "Select Group ▾",
+      groupInput: ""
     };
     this.getGroups = this.getGroups.bind(this);
     this.setUserID = this.setUserID.bind(this);
     this.postSubID = this.postSubID.bind(this);
     this.updateUserID = this.updateUserID.bind(this);
+    this.updateGroupInput = this.updateGroupInput.bind(this);
+    this.addGroup = this.addGroup.bind(this);
   }
 
   componentDidUpdate() {
@@ -144,11 +154,30 @@ class LogoutNavbar extends React.Component {
       );
   }
 
+  addGroup() {
+    console.log(this.state.groupInput)
+    fetch("https://fee-splitter.herokuapp.com/users/groups/add?groupTitle=" + this.state.groupInput + "&userID=" + this.state.user_id)
+      .then(response => response.json())
+      .then(response => console.log("Success:", JSON.stringify(response)))
+  }
+
+  updateGroupInput(e) {
+    this.setState({
+      groupInput: e.target.value
+    });
+  }
+
   toggleGroup(id, title){
     this.props.toggleGroup(id, title)
     this.setState({
       groupSelectText: title + " ▾"
     });
+  }
+
+  toggleRefresh() {
+    this.setState({
+      refresh: !this.state.refresh
+    })
   }
 
   render() {
@@ -268,6 +297,33 @@ class LogoutNavbar extends React.Component {
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </Nav>
+                <ListItem>
+            <TextField
+              id="standard-bare"
+              placeholder="add group"
+              margin="normal"
+              onChange={this.updateGroupInput}
+              inputProps={{ "aria-label": "bare" }}
+            />
+            <div>
+              {/* <button onClick={this.addGroup}> Add</button> */}
+              <button id="addGroupButton" onClick={this.addGroup}>
+                Add
+              </button>
+              {
+                this.state.refresh ? (
+                  window.location.reload()
+                ) : null
+                //window.location.reload()
+              //   this.state.showPopup ? (
+              //   <AddUsersPopup
+              //     text='Click "Close Button" to hide popup'
+              //     closePopup={this.togglePopup.bind(this)}
+              //   />
+              // ) : null
+              }
+            </div>
+          </ListItem>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem className="d-none d-lg-block ml-lg-4">
                     <span className="nav-link-inner--text">Welcome, {this.state.name}</span>
