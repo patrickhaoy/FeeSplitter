@@ -95,7 +95,15 @@ class UsersView extends React.Component {
         this.state.emailInput
     )
       .then(response => response.json())
-      .then(response => console.log("Success:", JSON.stringify(response)))
+      //.then(response => console.log("Success:", JSON.stringify(response)))
+      .then(response =>
+        this.setState({
+          users: response.data
+        },
+        function() {
+          console.log(this.state.users)
+        })
+      )
       .catch(
         (this.togglePopup = this.togglePopup.bind(this))
         );
@@ -157,7 +165,7 @@ class UsersView extends React.Component {
   render() {
     return (
       <div
-        style={{ width: "20%", margin: "1em", padding: "0.5em" }}
+        style={{ width: "20%", height: "50%", margin: "1em", padding: "0.5em" }}
         className="Users"
       >
         <AppBar position="static">
@@ -187,8 +195,6 @@ class UsersView extends React.Component {
               onChange={this.updateEmailInput}
               inputProps={{ "aria-label": "bare" }}
             />
-            {/*  */}
-
             <div>
               {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
               <ListItemText id="addEmailButton" onClick={this.getUserEmail}>
@@ -228,14 +234,7 @@ class UsersView extends React.Component {
                 return (
                   <ListItem key={user} button>
                     <ListItemText id={labelId} primary={user.firstName} />
-                    <ListItemSecondaryAction>
-                      <Checkbox
-                        edge="end"
-                        onChange={this.handleToggle(user.user_id)}
-                        //checked={checked.indexOf(value) !== -1}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemSecondaryAction>
+                    <span>{user.firstName}</span>
                   </ListItem>
                 );
               }
