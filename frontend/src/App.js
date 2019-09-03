@@ -96,14 +96,8 @@ class UsersView extends React.Component {
     )
       .then(response => response.json())
       //.then(response => console.log("Success:", JSON.stringify(response)))
-      .then(response =>
-        this.setState({
-          users: response.data
-        },
-        function() {
-          console.log(this.state.users)
-        })
-      )
+      .then(response => this.getUsers())
+      .then(response => this.setState({ emailInput: ""}))
       .catch(
         (this.togglePopup = this.togglePopup.bind(this))
         );
@@ -157,7 +151,7 @@ class UsersView extends React.Component {
         userID
     )
       .then(response => response.json())
-      .then(response => console.log("Success:", JSON.stringify(response)))
+      .then(response => this.getUsers())
   }
 
   //[checked, setChecked] = React.useState([1]);
@@ -189,6 +183,7 @@ class UsersView extends React.Component {
         <Paper>
           <ListItem>
             <TextField
+              value = {this.state.emailInput}
               id="standard-bare"
               placeholder="add friend's email"
               margin="normal"
@@ -234,7 +229,6 @@ class UsersView extends React.Component {
                 return (
                   <ListItem key={user} button>
                     <ListItemText id={labelId} primary={user.firstName} />
-                    <span>{user.firstName}</span>
                   </ListItem>
                 );
               }
@@ -291,10 +285,13 @@ class AddTransactionPopup extends React.Component {
     super(props);
     this.state = {
       users: [],
-      groupID: props.groupID
+      groupID: props.groupID,
+      tranTitle: ""
     };
     console.log(this.state.groupID);
     this.getUsers = this.getUsers.bind(this);
+    this.handleAddTransaction = this.handleAddTransaction.bind(this)
+    this.updateTranTitleInput = this.updateTranTitleInput.bind(this)
   }
 
   componentDidMount() {
@@ -307,6 +304,24 @@ class AddTransactionPopup extends React.Component {
     });
 
     this.getUsers();
+  }
+
+  updateTranTitleInput(e) {
+    this.setState({
+      tranTitle: e.target.value
+    });
+  }
+
+  getTranTitle() {
+    console.log(this.state.tranTitle)
+  }
+
+  getSenders() {
+
+  }
+
+  getRecpients() {
+    
   }
 
   getUsers() {
@@ -322,6 +337,10 @@ class AddTransactionPopup extends React.Component {
       );
   }
 
+  handleAddTransaction() {
+    this.props.addTransaction()
+  }
+
   render() {
     return (
       <div className="popup">
@@ -329,14 +348,19 @@ class AddTransactionPopup extends React.Component {
           <div className="popup_header">
             <h1>Add a Transaction</h1>
           </div>
-          <h5 align="center">Add a transaction here!</h5>
+          <TextField
+              placeholder="name of transaction"
+              margin="normal"
+              //onChange={this.updateEmailInput}
+              inputProps={{ "aria-label": "bare" }}
+            />
           <div>
             <span style={{ color: "black", margin: "1em" }}>From</span>
             <Select
               mode="multiple"
               style={{ width: "30%" }}
               placeholder="select payers"
-              //onChange={handleChange}
+              onChange={this.updateTranTitleInput}
               optionLabelProp="label"
             >
               {this.state.users.map(user => {
@@ -345,7 +369,7 @@ class AddTransactionPopup extends React.Component {
                 return (
                   <Option value={labelId} label={fullName}>
                     <span role="img" aria-label={fullName}>
-                      🇨🇳{" "}
+                      {" "}
                     </span>
                     {fullName}
                   </Option>
@@ -366,7 +390,7 @@ class AddTransactionPopup extends React.Component {
                 return (
                   <Option value={labelId} label={fullName}>
                     <span role="img" aria-label={fullName}>
-                      🇨🇳{" "}
+                      {" "}
                     </span>
                     {fullName}
                   </Option>
@@ -374,7 +398,7 @@ class AddTransactionPopup extends React.Component {
               })}
             </Select>
           </div>
-          <Button style={{ margin: "1em" }} type="button">
+          <Button style={{ margin: "1em" }} type="button" onClick={this.handleAddTransaction}>
             Add
           </Button>
           <Button
@@ -408,6 +432,7 @@ class TransactionsView extends React.Component {
     this.toggleEditMode = this.toggleEditMode.bind(this);
     this.showTransactionPopup = this.showTransactionPopup.bind(this);
     this.closeTransactionPopup = this.closeTransactionPopup.bind(this);
+    this.addTransaction = this.addTransaction.bind(this);
   }
 
   componentDidMount() {
@@ -499,6 +524,14 @@ class TransactionsView extends React.Component {
     });
   }
 
+  addTransaction() {
+    console.log("adding transaction from main")
+    fetch(
+      //"https://fee-splitter.herokuapp.com/transactions/add?tranTitle=" + tranTitle
+
+    )
+  }
+
   handleSwitchChange = event => {
     this.setState(
       {
@@ -550,6 +583,7 @@ class TransactionsView extends React.Component {
                 groupID={this.state.groupID}
                 text='Click "Close Button" to hide popup'
                 closePopup={this.closeTransactionPopup}
+                addTransaction={this.addTransaction}
               />
             ) : null}
           </Toolbar>
