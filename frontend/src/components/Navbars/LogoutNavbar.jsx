@@ -54,7 +54,8 @@ class LogoutNavbar extends React.Component {
       profile: "false",
       user_id: 1,
       groupSelectText: "Select Group ▾",
-      groupInput: ""
+      groupInput: "",
+      showGroupPopup: false
     };
     this.getGroups = this.getGroups.bind(this);
     this.setUserID = this.setUserID.bind(this);
@@ -62,6 +63,7 @@ class LogoutNavbar extends React.Component {
     this.updateUserID = this.updateUserID.bind(this);
     this.updateGroupInput = this.updateGroupInput.bind(this);
     this.addGroup = this.addGroup.bind(this);
+    this.closeAddGroupPopup = this.closeAddGroupPopup.bind(this);
   }
 
   componentDidUpdate() {
@@ -158,7 +160,10 @@ class LogoutNavbar extends React.Component {
     console.log(this.state.groupInput)
     fetch("https://fee-splitter.herokuapp.com/users/groups/add?groupTitle=" + this.state.groupInput + "&userID=" + this.state.user_id)
       .then(response => response.json())
-      .then(response => console.log("Success:", JSON.stringify(response)))
+      //.then(response => console.log("Success:", JSON.stringify(response)))
+      .then(response => this.getGroups())
+      .then(response => this.setState({showGroupPopup: false}))
+      //.then(response => ) CHANGE CURRENT GROUP HERE
   }
 
   updateGroupInput(e) {
@@ -177,6 +182,12 @@ class LogoutNavbar extends React.Component {
   toggleRefresh() {
     this.setState({
       refresh: !this.state.refresh
+    })
+  }
+
+  closeAddGroupPopup() {
+    this.setState({
+      showGroupPopup: false
     })
   }
 
@@ -219,72 +230,6 @@ class LogoutNavbar extends React.Component {
                   </Row>
                 </div>
                 <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                  {/* 
-                  <UncontrolledDropdown nav>
-                    <DropdownToggle nav>
-                      <i className="ni ni-ui-04 d-lg-none mr-1" />
-                      <span className="nav-link-inner--text">Components</span>
-                    </DropdownToggle>
-                    <DropdownMenu className="dropdown-menu-xl">
-                      <div className="dropdown-menu-inner">
-                        <Media
-                          className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/overview?ref=adsr-navbar"
-                          target="_blank"
-                        >
-                          <div className="icon icon-shape bg-gradient-primary rounded-circle text-white">
-                            <i className="ni ni-spaceship" />
-                          </div>
-                          <Media body className="ml-3">
-                            <h6 className="heading text-primary mb-md-1">
-                              Getting started
-                            </h6>
-                            <p className="description d-none d-md-inline-block mb-0">
-                              Learn how to use Argon compiling Scss, change
-                              brand colors and more.
-                            </p>
-                          </Media>
-                        </Media>
-                        <Media
-                          className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/colors?ref=adsr-navbar"
-                          target="_blank"
-                        >
-                          <div className="icon icon-shape bg-gradient-success rounded-circle text-white">
-                            <i className="ni ni-palette" />
-                          </div>
-                          <Media body className="ml-3">
-                            <h6 className="heading text-primary mb-md-1">
-                              Foundation
-                            </h6>
-                            <p className="description d-none d-md-inline-block mb-0">
-                              Learn more about colors, typography, icons and the
-                              grid system we used for Argon.
-                            </p>
-                          </Media>
-                        </Media>
-                        <Media
-                          className="d-flex align-items-center"
-                          href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/alert?ref=adsr-navbar"
-                          target="_blank"
-                        >
-                          <div className="icon icon-shape bg-gradient-warning rounded-circle text-white">
-                            <i className="ni ni-ui-04" />
-                          </div>
-                          <Media body className="ml-3">
-                            <h5 className="heading text-warning mb-md-1">
-                              Components
-                            </h5>
-                            <p className="description d-none d-md-inline-block mb-0">
-                              Browse our 50 beautiful handcrafted components
-                              offered in the Free version.
-                            </p>
-                          </Media>
-                        </Media>
-                      </div>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                  */}
                   <UncontrolledDropdown nav>
                     <DropdownToggle nav>
                       <i className="ni ni-collection d-lg-none mr-1" />
@@ -294,11 +239,20 @@ class LogoutNavbar extends React.Component {
                       {this.state.groups.map(group => {
                         return <DropdownItem onClick={() => this.toggleGroup(group.groupID, group.groupTitle)}>{group.groupTitle}</DropdownItem>;
                       })}
+                      <DropdownItem onClick={() => this.setState({showGroupPopup: true})}>Add New Group +</DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 </Nav>
                 <ListItem>
-            <TextField
+            {this.state.showGroupPopup ? (
+              <AddGroupPopup
+                closePopup={this.closeAddGroupPopup}
+                updateGroupInput={this.updateGroupInput}
+                addGroup={this.addGroup}
+                //addTransaction={this.addTransaction}
+              />
+            ) : null}
+            {/* <TextField
               id="standard-bare"
               placeholder="add group"
               margin="normal"
@@ -306,7 +260,6 @@ class LogoutNavbar extends React.Component {
               inputProps={{ "aria-label": "bare" }}
             />
             <div>
-              {/* <button onClick={this.addGroup}> Add</button> */}
               <button id="addGroupButton" onClick={this.addGroup}>
                 Add
               </button>
@@ -314,15 +267,8 @@ class LogoutNavbar extends React.Component {
                 this.state.refresh ? (
                   window.location.reload()
                 ) : null
-                //window.location.reload()
-              //   this.state.showPopup ? (
-              //   <AddUsersPopup
-              //     text='Click "Close Button" to hide popup'
-              //     closePopup={this.togglePopup.bind(this)}
-              //   />
-              // ) : null
               }
-            </div>
+            </div> */}
           </ListItem>
                 <Nav className="align-items-lg-center ml-lg-auto" navbar>
                   <NavItem className="d-none d-lg-block ml-lg-4">
@@ -344,6 +290,36 @@ class LogoutNavbar extends React.Component {
           </Navbar>
         </header>
       </>
+    );
+  }
+}
+
+class AddGroupPopup extends React.Component{
+  render() {
+    return (
+      <div className="group_popup">
+        <div className="group_popup_inner" style={{ textAlign: "center" }}>
+          <TextField
+              id="standard-bare"
+              placeholder="group name here"
+              margin="normal"
+              style={{width: "50%"}}
+              //onChange={this.updateGroupInput}
+              inputProps={{ "aria-label": "bare" }}
+              onChange={this.props.updateGroupInput}
+            />
+          <Button style={{ margin: "1em" }} type="button" onClick={this.props.addGroup}>
+            Add
+          </Button>
+          <Button
+            style={{ margin: "1em" }}
+            type="button"
+            onClick={this.props.closePopup}
+          >
+            Close
+          </Button>
+        </div>
+      </div>
     );
   }
 }
