@@ -156,7 +156,7 @@ class UsersView extends React.Component {
   render() {
     return (
       <div
-        style={{ width: "20%", height: "50%", margin: "1em", padding: "0.5em" }}
+        style={{ display: "inline-block", width: "20%", margin: "1em", padding: "0.5em" }}
         className="Users"
       >
         <AppBar position="static">
@@ -177,7 +177,7 @@ class UsersView extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Paper>
+        <Paper style={{maxHeight: 300, overflow: 'auto'}}>
           <ListItem>
             <TextField
               value={this.state.emailInput}
@@ -637,7 +637,7 @@ class TransactionsView extends React.Component {
   render() {
     return (
       <div
-        style={{ width: "40%", margin: "1em", padding: "0.5em" }}
+        style={{ display: "inline-block", width: "40%", margin: "1em", padding: "0.5em" }}
         className="Transactions"
       >
         <AppBar position="static">
@@ -675,7 +675,7 @@ class TransactionsView extends React.Component {
             ) : null}
           </Toolbar>
         </AppBar>
-        <Paper>
+        <Paper style={{maxHeight: 300, overflow: 'auto'}}>
           <List>
             {this.state.transactions.map(transaction => {
               const labelId = transaction.tranID;
@@ -837,7 +837,7 @@ class OweView extends React.Component {
 
   render() {
     return (
-      <Paper>
+      <Paper style={{display: "inline-block", width: "50%"}}>
         <Table>
           <TableHead>
             <TableRow>
