@@ -806,6 +806,7 @@ class OweView extends React.Component {
       .all(promises)
       .then(function(results) {
         results.forEach(function(response) {
+          console.log(response)
           transactionsList.push(response.data.data);
         });
       })

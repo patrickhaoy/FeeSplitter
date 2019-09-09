@@ -34,6 +34,7 @@ class Home extends Component {
       userID: ""
     }
 
+    this.app = React.createRef()
     this.toggleGroup = this.toggleGroup.bind(this);
     this.setUser = this.setUser.bind(this);
   }
@@ -51,6 +52,9 @@ class Home extends Component {
       selectedGroupTitle: group,
       selectedGroupID: id,
       groupSelected: true
+    },
+    function() {
+      this.app.current.oweView.current.populateTransactionTable()
     });
   }
 
@@ -70,7 +74,7 @@ class Home extends Component {
           isAuthenticated() &&
           <div>
             <LogoutNavbar setUser = {this.setUser} toggleGroup = {this.toggleGroup} logout = {this.logout}></LogoutNavbar>
-            <App groupSelected = {this.state.groupSelected} userID = {this.state.userID} groupTitle = {this.state.selectedGroupTitle} groupID = {this.state.selectedGroupID}/>
+            <App ref = {this.app} groupSelected = {this.state.groupSelected} userID = {this.state.userID} groupTitle = {this.state.selectedGroupTitle} groupID = {this.state.selectedGroupID}/>
           </div>
         }
         {
