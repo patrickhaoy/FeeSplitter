@@ -156,7 +156,12 @@ class UsersView extends React.Component {
   render() {
     return (
       <div
-        style={{ display: "inline-block", width: "20%", margin: "1em", padding: "0.5em" }}
+        style={{
+          display: "inline-block",
+          width: "20%",
+          margin: "1em",
+          padding: "0.5em"
+        }}
         className="Users"
       >
         <AppBar position="static">
@@ -177,7 +182,7 @@ class UsersView extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Paper style={{maxHeight: 300, overflow: 'auto'}}>
+        <Paper style={{ maxHeight: 300, overflow: "auto" }}>
           <ListItem>
             <TextField
               value={this.state.emailInput}
@@ -603,20 +608,19 @@ class TransactionsView extends React.Component {
     }
 
     axios.all(promises).then(function() {
-      self.getTransactions()
-      self.closeTransactionPopup()
-      self.props.updateTransactionTable()
+      self.getTransactions();
+      self.closeTransactionPopup();
+      self.props.updateTransactionTable();
     });
   }
 
   deleteRowTransaction(tranID) {
     fetch(
-      "https://fee-splitter.herokuapp.com/transactions/delete?tranID=" +
-        tranID
+      "https://fee-splitter.herokuapp.com/transactions/delete?tranID=" + tranID
     )
       .then(response => response.json())
       .then(response => this.getTransactions())
-      .then(response => this.props.updateTransactionTable())
+      .then(response => this.props.updateTransactionTable());
   }
 
   handleSwitchChange = event => {
@@ -637,7 +641,12 @@ class TransactionsView extends React.Component {
   render() {
     return (
       <div
-        style={{ display: "inline-block", width: "40%", margin: "1em", padding: "0.5em" }}
+        style={{
+          display: "inline-block",
+          width: "40%",
+          margin: "1em",
+          padding: "0.5em"
+        }}
         className="Transactions"
       >
         <AppBar position="static">
@@ -675,13 +684,13 @@ class TransactionsView extends React.Component {
             ) : null}
           </Toolbar>
         </AppBar>
-        <Paper style={{maxHeight: 300, overflow: 'auto'}}>
+        <Paper style={{ maxHeight: 300, overflow: "auto" }}>
           <List>
             {this.state.transactions.map(transaction => {
               const labelId = transaction.tranID;
               const labelAmount = `checkbox-list-secondary-label-${transaction.amount}`;
               const amount = `$${transaction.amount}`;
-              const payMessage = `${transaction.fromID_firstName} ${transaction.fromID_lastName} paid ${transaction.toID_firstName} ${transaction.toID_lastName}`;
+              const payMessage = `${transaction.fromID_firstName} ${transaction.fromID_lastName} paid for ${transaction.toID_firstName} ${transaction.toID_lastName}`;
               if (this.state.editMode) {
                 return (
                   <ListItem key={transaction} button>
@@ -731,13 +740,15 @@ class OweView extends React.Component {
     this.state = {
       users: [],
       groupID: props.groupID,
-      transactionTotals: []
+      transactionTotals: [],
+      oweList: []
     };
 
     this.getUsers = this.getUsers.bind(this);
     this.getUserID = this.getUserID.bind(this);
     this.populateTransactionTable = this.populateTransactionTable.bind(this);
     this.partitionArray = this.partitionArray.bind(this);
+    this.findNetOwes = this.findNetOwes.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -782,6 +793,35 @@ class OweView extends React.Component {
     return parent;
   }
 
+  findNetOwes(oweList) {
+    for (var i = 0; i < oweList.length; i++) {
+      var currentOwe = oweList[i];
+      for (var j = i + 1; j < oweList.length; j++) {
+        if (
+          oweList[j].fromID === currentOwe.toID &&
+          oweList[j].toID === currentOwe.fromID
+        ) {
+          if (oweList[j].amount > currentOwe.amount) {
+            oweList[j].amount = parseFloat(
+              (oweList[j].amount - currentOwe.amount).toFixed(2)
+            );
+            oweList.splice(i, 1);
+          } else if (currentOwe.amount > oweList[j].amount) {
+            currentOwe.amount = parseFloat(
+              (currentOwe.amount - oweList[j].amount).toFixed(2)
+            );
+
+            oweList.splice(j, 1);
+          } else {
+            oweList.splice(j, 1);
+            oweList.splice(i, 1);
+          }
+        }
+      }
+    }
+    return oweList;
+  }
+
   populateTransactionTable() {
     var self = this;
     var transactionsList = [];
@@ -806,29 +846,61 @@ class OweView extends React.Component {
       .all(promises)
       .then(function(results) {
         results.forEach(function(response) {
-          console.log(response)
           transactionsList.push(response.data.data);
         });
       })
+      // .then(function() {
+      //   var amountList = [];
+      //   for (var i = 0; i < transactionsList.length; i++) {
+      //     var currentTransactions = transactionsList[i];
+      //     var total = 0;
+      //     for (var j = 0; j < currentTransactions.length; j++) {
+      //       total += parseFloat(currentTransactions[j].amount);
+      //     }
+      //     amountList[i] = total;
+      //   }
+
+      //   var partioned = self.partitionArray(
+      //     amountList,
+      //     user_id_list.length,
+      //     usernames
+      //   );
+      //   self.setState({
+      //     transactionTotals: partioned
+      //   });
+      // });
       .then(function() {
-        var amountList = [];
+        var oweList = [];
         for (var i = 0; i < transactionsList.length; i++) {
           var currentTransactions = transactionsList[i];
           var total = 0;
           for (var j = 0; j < currentTransactions.length; j++) {
-            total += parseFloat(currentTransactions[j].amount);
+            var currentAmount = parseFloat(
+              parseFloat(currentTransactions[j].amount).toFixed(2)
+            );
+            total += currentAmount;
           }
-          amountList[i] = total;
+          if (total !== 0) {
+            oweList.push({
+              fromID: currentTransactions[0].toID,
+              fromID_firstName: currentTransactions[0].toID_firstName,
+              fromID_lastName: currentTransactions[0].toID_lastName,
+              toID: currentTransactions[0].fromID,
+              toID_firstName: currentTransactions[0].fromID_firstName,
+              toID_lastName: currentTransactions[0].fromID_lastName,
+              amount: total
+            });
+          }
         }
 
-        var partioned = self.partitionArray(
-          amountList,
-          user_id_list.length,
-          usernames
+        self.setState(
+          {
+            oweList: self.findNetOwes(oweList)
+          },
+          function() {
+            console.log(this.state.oweList);
+          }
         );
-        self.setState({
-          transactionTotals: partioned
-        });
       });
   }
 
@@ -838,8 +910,8 @@ class OweView extends React.Component {
 
   render() {
     return (
-      <Paper style={{display: "inline-block", width: "50%"}}>
-        <Table>
+      <div style={{ display: "inline-block", width: "25%" }}>
+        {/* <Table>
           <TableHead>
             <TableRow>
               <TableCell>User</TableCell>
@@ -858,8 +930,41 @@ class OweView extends React.Component {
               </TableRow>
             ))}
           </TableBody>
-        </Table>
-      </Paper>
+        </Table> */}
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className="IconButton"
+              color="inherit"
+              aria-label="menu"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography style={{ flex: 1 }} variant="h6" className="Title">
+              Owes
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Paper style = {{ maxHeight: 300, overflow: "auto" }}>
+          <List>
+            {this.state.oweList.map(owe => {
+              const labelAmount = `checkbox-list-secondary-label-${owe.amount}`;
+              const amount = `$${owe.amount}`;
+              const payMessage = `${owe.fromID_firstName} ${owe.fromID_lastName} owes ${owe.toID_firstName} ${owe.toID_lastName}`;
+              return (
+                <ListItem button>
+                  <ListItemText primary={payMessage} />
+                  <ListItemSecondaryAction>
+                    <ListItemText id={labelAmount} primary={amount} />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              );
+            })}
+            ;
+          </List>
+        </Paper>
+      </div>
     );
   }
 }
