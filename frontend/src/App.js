@@ -984,17 +984,17 @@ class OweView extends React.Component {
             {this.state.oweList.map(owe => {
               const labelAmount = `checkbox-list-secondary-label-${owe.amount}`;
               const amount = `$${owe.amount}`;
-              const payMessage = `${owe.fromID_firstName} ${owe.fromID_lastName} owes ${owe.toID_firstName} ${owe.toID_lastName}`;
+              const payer = `${owe.fromID_firstName} ${owe.fromID_lastName}`
+              const payMessage = `owes ${owe.toID_firstName} ${owe.toID_lastName}`;
               return (
                 <ListItem button>
-                  <ListItemText primary={payMessage} />
+                  <ListItemText primary={payer} secondary={payMessage}/>
                   <ListItemSecondaryAction>
                     <ListItemText id={labelAmount} primary={amount} />
                   </ListItemSecondaryAction>
                 </ListItem>
               );
             })}
-            ;
           </List>
         </Paper>
       </div>
