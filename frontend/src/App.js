@@ -28,6 +28,24 @@ import axios from "axios";
 import { Select } from "antd";
 import { transcode } from "buffer";
 
+import {
+  UncontrolledCollapse,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+  UncontrolledDropdown,
+  Media,
+  NavbarBrand,
+  Navbar,
+  NavItem,
+  NavLink,
+  Nav,
+  Container,
+  Row,
+  Col,
+  UncontrolledTooltip
+} from "reactstrap";
+
 class UsersView extends React.Component {
   constructor(props) {
     super(props);
@@ -151,6 +169,11 @@ class UsersView extends React.Component {
       .then(response => this.getUsers());
   }
 
+  deleteGroup() {
+    console.log(this.state.groupID)
+    fetch("https://fee-splitter.herokuapp.com/users/groups/delete?groupID=" + this.state.groupID).then(window.location.reload())
+  }
+
   //[checked, setChecked] = React.useState([1]);
 
   render() {
@@ -183,6 +206,16 @@ class UsersView extends React.Component {
           </Toolbar>
         </AppBar>
         <Paper style={{ maxHeight: 300, overflow: "auto" }}>
+          <NavItem className="d-none d-lg-block ml-lg-4">
+              <Button
+                className="btn-neutral btn-icon"
+                color="default"
+                onClick={() => this.deleteGroup()}
+                target="_blank"
+              >
+                <span className="nav-link-inner--text ml-1">Delete Group</span>
+              </Button>
+            </NavItem>
           <ListItem>
             <TextField
               value={this.state.emailInput}

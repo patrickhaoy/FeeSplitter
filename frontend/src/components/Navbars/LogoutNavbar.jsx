@@ -191,6 +191,10 @@ class LogoutNavbar extends React.Component {
     })
   }
 
+  // deleteGroup() {
+  //   fetch("https://fee-splitter.herokuapp.com/users/groups/delete?groupID=" + this.state.groupID) .then(response => response.json())
+  // }
+
   render() {
     return (
       <>
