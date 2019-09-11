@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/feesplitter/static/css/main.30201dbe.chunk.css",
-    "main.js": "/feesplitter/static/js/main.89b8b203.chunk.js",
-    "main.js.map": "/feesplitter/static/js/main.89b8b203.chunk.js.map",
-    "runtime~main.js": "/feesplitter/static/js/runtime~main.d9f61da1.js",
-    "runtime~main.js.map": "/feesplitter/static/js/runtime~main.d9f61da1.js.map",
-    "static/css/2.93e9ecf4.chunk.css": "/feesplitter/static/css/2.93e9ecf4.chunk.css",
-    "static/js/2.08fe9287.chunk.js": "/feesplitter/static/js/2.08fe9287.chunk.js",
-    "static/js/2.08fe9287.chunk.js.map": "/feesplitter/static/js/2.08fe9287.chunk.js.map",
-    "index.html": "/feesplitter/index.html",
-    "precache-manifest.e747727950d8e61efe86957b99447488.js": "/feesplitter/precache-manifest.e747727950d8e61efe86957b99447488.js",
-    "service-worker.js": "/feesplitter/service-worker.js",
-    "static/css/2.93e9ecf4.chunk.css.map": "/feesplitter/static/css/2.93e9ecf4.chunk.css.map",
-    "static/css/main.30201dbe.chunk.css.map": "/feesplitter/static/css/main.30201dbe.chunk.css.map",
-    "static/media/argon-react.png": "/feesplitter/static/media/argon-react.f38ddea9.png",
-    "static/media/font-awesome.min.css": "/feesplitter/static/media/fontawesome-webfont.fee66e71.woff",
-    "static/media/nucleo.css": "/feesplitter/static/media/nucleo-icons.f82ec6ba.ttf"
+    "main.css": "/FeeSplitter/static/css/main.832f35f8.chunk.css",
+    "main.js": "/FeeSplitter/static/js/main.8be966ca.chunk.js",
+    "main.js.map": "/FeeSplitter/static/js/main.8be966ca.chunk.js.map",
+    "runtime~main.js": "/FeeSplitter/static/js/runtime~main.6ab036f2.js",
+    "runtime~main.js.map": "/FeeSplitter/static/js/runtime~main.6ab036f2.js.map",
+    "static/css/2.93e9ecf4.chunk.css": "/FeeSplitter/static/css/2.93e9ecf4.chunk.css",
+    "static/js/2.e53c5b4b.chunk.js": "/FeeSplitter/static/js/2.e53c5b4b.chunk.js",
+    "static/js/2.e53c5b4b.chunk.js.map": "/FeeSplitter/static/js/2.e53c5b4b.chunk.js.map",
+    "index.html": "/FeeSplitter/index.html",
+    "precache-manifest.d7a5b0e43ca7d66fa312246e851570db.js": "/FeeSplitter/precache-manifest.d7a5b0e43ca7d66fa312246e851570db.js",
+    "service-worker.js": "/FeeSplitter/service-worker.js",
+    "static/css/2.93e9ecf4.chunk.css.map": "/FeeSplitter/static/css/2.93e9ecf4.chunk.css.map",
+    "static/css/main.832f35f8.chunk.css.map": "/FeeSplitter/static/css/main.832f35f8.chunk.css.map",
+    "static/media/argon-react.png": "/FeeSplitter/static/media/argon-react.f38ddea9.png",
+    "static/media/font-awesome.min.css": "/FeeSplitter/static/media/fontawesome-webfont.fee66e71.woff",
+    "static/media/nucleo.css": "/FeeSplitter/static/media/nucleo-icons.f82ec6ba.ttf"
   }
 }
