@@ -1026,7 +1026,6 @@ class App extends React.Component {
   }
 
   updateTransactionTable() {
-    console.log("repopulating!!!");
     this.oweView.current.populateTransactionTable();
   }
 
