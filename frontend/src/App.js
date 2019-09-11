@@ -206,7 +206,7 @@ class UsersView extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <Paper style={{ maxHeight: 300, overflow: "auto" }}>
+        <Paper style={{ maxHeight: 400, overflow: "auto" }}>
             <div>
               {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
               <Button id="deleteGroupsPopup" onClick={this.toggleGroupPopup.bind(this)}>
@@ -771,7 +771,7 @@ class TransactionsView extends React.Component {
             ) : null}
           </Toolbar>
         </AppBar>
-        <Paper style={{ maxHeight: 300, overflow: "auto" }}>
+        <Paper style={{ maxHeight: 400, overflow: "auto" }}>
           <List>
             {this.state.transactions.map(transaction => {
               const labelId = transaction.tranID;
@@ -1033,7 +1033,7 @@ class OweView extends React.Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Paper style = {{ maxHeight: 300, overflow: "auto" }}>
+        <Paper style = {{ maxHeight: 400, overflow: "auto" }}>
           <List>
             {this.state.oweList.map(owe => {
               const labelAmount = `checkbox-list-secondary-label-${owe.amount}`;
