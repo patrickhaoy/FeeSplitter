@@ -152,6 +152,12 @@ class UsersView extends React.Component {
     });
   }
 
+  toggleGroupPopup() {
+    this.setState({
+      showGroupPopup: !this.state.showGroupPopup
+    })
+  }
+
   updateEmailInput(e) {
     this.setState({
       emailInput: e.target.value
@@ -167,11 +173,6 @@ class UsersView extends React.Component {
     )
       .then(response => response.json())
       .then(response => this.getUsers());
-  }
-
-  deleteGroup() {
-    console.log(this.state.groupID)
-    fetch("https://fee-splitter.herokuapp.com/users/groups/delete?groupID=" + this.state.groupID).then(window.location.reload())
   }
 
   //[checked, setChecked] = React.useState([1]);
@@ -206,7 +207,20 @@ class UsersView extends React.Component {
           </Toolbar>
         </AppBar>
         <Paper style={{ maxHeight: 300, overflow: "auto" }}>
-          <NavItem className="d-none d-lg-block ml-lg-4">
+            <div>
+              {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
+              <Button id="deleteGroupsPopup" onClick={this.toggleGroupPopup.bind(this)}>
+                Delete Group
+              </Button>
+              {this.state.showGroupPopup ? (
+                <DeleteGroupsPopup
+                  groupID={this.state.groupID}
+                  text='Click "Close Button" to hide popup'
+                  closeGroupPopup={this.toggleGroupPopup.bind(this)}
+                />
+              ) : null}
+            </div>
+          {/* <NavItem className="d-none d-lg-block ml-lg-4">
               <Button
                 className="btn-neutral btn-icon"
                 color="default"
@@ -215,7 +229,7 @@ class UsersView extends React.Component {
               >
                 <span className="nav-link-inner--text ml-1">Delete Group</span>
               </Button>
-            </NavItem>
+            </NavItem> */}
           <ListItem>
             <TextField
               value={this.state.emailInput}
@@ -273,6 +287,44 @@ class UsersView extends React.Component {
   }
 }
 
+class DeleteGroupsPopup extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      groupID: props.groupID
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      groupID: nextProps.groupID
+    });
+  }
+
+  deleteGroup() {
+    console.log("GroupID: " + this.state.groupID)
+    fetch("https://fee-splitter.herokuapp.com/users/groups/delete?groupID=" + this.state.groupID).then(window.location.reload())
+  }
+
+  render() {
+    return (
+      <div className="popup">
+          <div className="popup_inner" style={{ textAlign: "center" }}>
+            <div className="popup_header">
+              <h1>Are you sure you want to delete this group?</h1>
+            </div>
+            <Button type="button" onClick={() => this.deleteGroup()}>
+              Yes, delete this group!
+            </Button>
+            <Button type="button" onClick={this.props.closeGroupPopup}>
+              No, don't delete this group!
+            </Button>
+          </div>
+        </div>
+    )
+  }
+}
+
 class AddUsersPopup extends React.Component {
   render() {
     return (
@@ -293,6 +345,8 @@ class AddUsersPopup extends React.Component {
     );
   }
 }
+
+
 
 // class AddUsersPopupSuccess extends React.Component {
 //   render() {
