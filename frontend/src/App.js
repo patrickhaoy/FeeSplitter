@@ -155,7 +155,7 @@ class UsersView extends React.Component {
   toggleGroupPopup() {
     this.setState({
       showGroupPopup: !this.state.showGroupPopup
-    })
+    });
   }
 
   updateEmailInput(e) {
@@ -207,19 +207,22 @@ class UsersView extends React.Component {
           </Toolbar>
         </AppBar>
         <Paper style={{ maxHeight: 400, overflow: "auto" }}>
-            <div>
-              {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
-              <Button id="deleteGroupsPopup" onClick={this.toggleGroupPopup.bind(this)}>
-                Delete Group
-              </Button>
-              {this.state.showGroupPopup ? (
-                <DeleteGroupsPopup
-                  groupID={this.state.groupID}
-                  text='Click "Close Button" to hide popup'
-                  closeGroupPopup={this.toggleGroupPopup.bind(this)}
-                />
-              ) : null}
-            </div>
+          <div>
+            {/*<button onClick={this.togglePopup.bind(this)}> Add</button>*/}
+            <Button
+              id="deleteGroupsPopup"
+              onClick={this.toggleGroupPopup.bind(this)}
+            >
+              Delete Group
+            </Button>
+            {this.state.showGroupPopup ? (
+              <DeleteGroupsPopup
+                groupID={this.state.groupID}
+                text='Click "Close Button" to hide popup'
+                closeGroupPopup={this.toggleGroupPopup.bind(this)}
+              />
+            ) : null}
+          </div>
           {/* <NavItem className="d-none d-lg-block ml-lg-4">
               <Button
                 className="btn-neutral btn-icon"
@@ -289,10 +292,10 @@ class UsersView extends React.Component {
 
 class DeleteGroupsPopup extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       groupID: props.groupID
-    }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -302,26 +305,29 @@ class DeleteGroupsPopup extends React.Component {
   }
 
   deleteGroup() {
-    console.log("GroupID: " + this.state.groupID)
-    fetch("https://fee-splitter.herokuapp.com/users/groups/delete?groupID=" + this.state.groupID).then(window.location.reload())
+    console.log("GroupID: " + this.state.groupID);
+    fetch(
+      "https://fee-splitter.herokuapp.com/users/groups/delete?groupID=" +
+        this.state.groupID
+    ).then(window.location.reload());
   }
 
   render() {
     return (
       <div className="popup">
-          <div className="popup_inner" style={{ textAlign: "center" }}>
-            <div className="popup_header">
-              <h1>Are you sure you want to delete this group?</h1>
-            </div>
-            <Button type="button" onClick={() => this.deleteGroup()}>
-              Yes, delete this group!
-            </Button>
-            <Button type="button" onClick={this.props.closeGroupPopup}>
-              No, don't delete this group!
-            </Button>
+        <div className="popup_inner" style={{ textAlign: "center" }}>
+          <div className="popup_header">
+            <h1>Are you sure you want to delete this group?</h1>
           </div>
+          <Button type="button" onClick={() => this.deleteGroup()}>
+            Yes, delete this group!
+          </Button>
+          <Button type="button" onClick={this.props.closeGroupPopup}>
+            No, don't delete this group!
+          </Button>
         </div>
-    )
+      </div>
+    );
   }
 }
 
@@ -345,8 +351,6 @@ class AddUsersPopup extends React.Component {
     );
   }
 }
-
-
 
 // class AddUsersPopupSuccess extends React.Component {
 //   render() {
@@ -836,6 +840,7 @@ class OweView extends React.Component {
     this.populateTransactionTable = this.populateTransactionTable.bind(this);
     this.partitionArray = this.partitionArray.bind(this);
     this.findNetOwes = this.findNetOwes.bind(this);
+    this.payWithVenmo = this.payWithVenmo.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -995,6 +1000,10 @@ class OweView extends React.Component {
     this.getUsers();
   }
 
+  payWithVenmo() {
+    window.alert("Sending venmo transactions to respective accounts!")
+  }
+
   render() {
     return (
       <div style={{ display: "inline-block", width: "25%" }}>
@@ -1031,18 +1040,24 @@ class OweView extends React.Component {
             <Typography style={{ flex: 1 }} variant="h6" className="Title">
               Owes
             </Typography>
+            <img
+              style = {{maxHeight: 30}}
+              onClick = {this.payWithVenmo}
+              alt="..."
+              src={require("./assets/img/icons/venmo_button.png")}
+            />
           </Toolbar>
         </AppBar>
-        <Paper style = {{ maxHeight: 400, overflow: "auto" }}>
+        <Paper style={{ maxHeight: 400, overflow: "auto" }}>
           <List>
             {this.state.oweList.map(owe => {
               const labelAmount = `checkbox-list-secondary-label-${owe.amount}`;
               const amount = `$${owe.amount}`;
-              const payer = `${owe.fromID_firstName} ${owe.fromID_lastName}`
+              const payer = `${owe.fromID_firstName} ${owe.fromID_lastName}`;
               const payMessage = `owes ${owe.toID_firstName} ${owe.toID_lastName}`;
               return (
                 <ListItem button>
-                  <ListItemText primary={payer} secondary={payMessage}/>
+                  <ListItemText primary={payer} secondary={payMessage} />
                   <ListItemSecondaryAction>
                     <ListItemText id={labelAmount} primary={amount} />
                   </ListItemSecondaryAction>
